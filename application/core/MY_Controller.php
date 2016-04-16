@@ -18,19 +18,19 @@ class MY_Controller extends CI_Controller
 	function __construct($params = array())
 	{
 		parent::__construct();
-		$this->load->model('Pinery_model', 'pineryModel');//
-		$this->load->model('Member_model', 'member');//会员
-		$this->load->model('Property_model', 'property');//房产
-		$this->load->model('Car_model', 'car');//车辆
-		$this->load->model('Market_model', 'market');//集市
-		$this->load->model('Services_model', 'services');//服务
-		$this->load->library('gycrypt');
-		$this->load->library('image');
+		// $this->load->model('Pinery_model', 'pineryModel');//
+		// $this->load->model('Member_model', 'member');//会员
+		// $this->load->model('Property_model', 'property');//房产
+		// $this->load->model('Car_model', 'car');//车辆
+		// $this->load->model('Market_model', 'market');//集市
+		// $this->load->model('Services_model', 'services');//服务
+		// $this->load->library('gycrypt');
+		// $this->load->library('image');
 		$this->uriEntity();//uri实体数据		
 
-		$this->init();//初始数据
+		// $this->init();//初始数据
 
-		$params['auth'] !== false && $this->auth();//验证
+		// $params['auth'] !== false && $this->auth();//验证
 	}
 	/**
 	* [初始数据]
@@ -38,48 +38,48 @@ class MY_Controller extends CI_Controller
 	*/
 	protected function init(){
 		//用户信息
-		$auth = mobi_getcookie('auth');
-		if($auth && $userId = intval($this->gycrypt->decrypt($auth))){			
-			$this->userEntity = $this->member->info($userId);
-			$this->userId = empty($this->userEntity) ? 0 : $userId;
-			$this->load->vars('userEntity',$this->userEntity);//映射到模板
-			$cityId = $this->userEntity['city_id'];
-		}
+		// $auth = mobi_getcookie('auth');
+		// if($auth && $userId = intval($this->gycrypt->decrypt($auth))){			
+		// 	$this->userEntity = $this->member->info($userId);
+		// 	$this->userId = empty($this->userEntity) ? 0 : $userId;
+		// 	$this->load->vars('userEntity',$this->userEntity);//映射到模板
+		// 	$cityId = $this->userEntity['city_id'];
+		// }
 
-		//网站头信息
-		$this->initData['dataCity'] = $dataCity = require(APPPATH.'/config/data_city.php');
+		// //网站头信息
+		// $this->initData['dataCity'] = $dataCity = require(APPPATH.'/config/data_city.php');
 
-		if($_REQUEST['cityid'] && $dataCity[$_REQUEST['cityid']]){
-			mobi_setcookie('cityId',$_REQUEST['cityid'],3600*24*30);
-			$cityId = $_REQUEST['cityid'];
-		}
+		// if($_REQUEST['cityid'] && $dataCity[$_REQUEST['cityid']]){
+		// 	mobi_setcookie('cityId',$_REQUEST['cityid'],3600*24*30);
+		// 	$cityId = $_REQUEST['cityid'];
+		// }
 
-		!$cityId && $cityId = mobi_getcookie('cityId');
-		$this->initData['cityId'] = $cityId = $dataCity[$cityId] ? intval($cityId) : 1;
-		$this->initData['cityName'] = $cityName = $dataCity[$cityId]['name'];
-		$this->initData['pineryTitle'] =  $cityName.'分类信息';
-		$this->initData['pineryDescription'] = "{$cityName}分类信息网，为你提供房产、二手、车辆、服务等海量分类信息，充分满足您免费查看发布信息的需求。";		
+		// !$cityId && $cityId = mobi_getcookie('cityId');
+		// $this->initData['cityId'] = $cityId = $dataCity[$cityId] ? intval($cityId) : 1;
+		// $this->initData['cityName'] = $cityName = $dataCity[$cityId]['name'];
+		// $this->initData['pineryTitle'] =  $cityName.'分类信息';
+		// $this->initData['pineryDescription'] = "{$cityName}分类信息网，为你提供房产、二手、车辆、服务等海量分类信息，充分满足您免费查看发布信息的需求。";		
 
-		//导航
-		$this->initData['dataMenu'] = require(APPPATH.'/config/data_menu.php');
+		// //导航
+		// $this->initData['dataMenu'] = require(APPPATH.'/config/data_menu.php');
 
-		//来源
-		$this->initData['dataSource'] = array(1=>'个人','机构');
+		// //来源
+		// $this->initData['dataSource'] = array(1=>'个人','机构');
 
-		//房产
-		$this->initData['dataProperty'] = require(APPPATH.'/config/data_property.php');
+		// //房产
+		// $this->initData['dataProperty'] = require(APPPATH.'/config/data_property.php');
 
-		//车辆
-		$this->initData['dataCar'] = require(APPPATH.'/config/data_car.php');
+		// //车辆
+		// $this->initData['dataCar'] = require(APPPATH.'/config/data_car.php');
 
-		//集市
-		$this->initData['dataMarket'] = require(APPPATH.'/config/data_market.php');
+		// //集市
+		// $this->initData['dataMarket'] = require(APPPATH.'/config/data_market.php');
 
-		//服务
-		$this->initData['dataServices'] = require(APPPATH.'/config/data_services.php');
+		// //服务
+		// $this->initData['dataServices'] = require(APPPATH.'/config/data_services.php');
 
-		$this->load->vars('initData',$this->initData);//映射到模板
-		return $this->initData;
+		// $this->load->vars('initData',$this->initData);//映射到模板
+		// return $this->initData;
 	}
 	/**
 	 * [验证]
