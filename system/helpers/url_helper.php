@@ -567,3 +567,98 @@ if ( ! function_exists('redirect'))
 		exit;
 	}
 }
+
+
+/* End of file url_helper.php */
+/* Location: ./system/helpers/url_helper.php */
+/* add by zsc for 2014-6-20*/
+
+/**
+ * [返回新浪微博短连接]
+ * @param  [type] $long_url [description]
+ * @param  string $apiKey   [description]
+ * @return [type]           [description]
+ */
+if ( ! function_exists('wbsina_shorturl')){
+	function wbsina_shorturl($long_url, $apiKey='1681459862'){
+	    $apiUrl='http://api.t.sina.com.cn/short_url/shorten.json?source='.$apiKey.'&url_long='.$long_url;
+	    $response = file_get_contents($apiUrl);
+	    $json = json_decode($response);
+	    return $json[0]->url_short;
+	}
+}
+/**
+ * [通过新浪微博短连接返回原始链接]
+ * @param  [type] $short_url [description]
+ * @param  string $apiKey    [description]
+ * @return [type]            [description]
+ */
+if ( ! function_exists('wbsina_expandurl')){
+	function wbsina_expandurl($short_url, $apiKey='1681459862'){
+	    $apiUrl='http://api.t.sina.com.cn/short_url/expand.json?source='.$apiKey.'&url_short='.$short_url;
+	    $response = file_get_contents($apiUrl);
+	    $json = json_decode($response);
+		return $json[0]->url_long;
+	}
+}
+
+/**
+ * [mobi_query_string description]
+ * @param  array  $unset [description]
+ * @return [type]        [description]
+ */
+if ( ! function_exists('mobi_query_string')){
+	function mobi_query_string($unset=array(),$query=array()){
+		$queryStirng = array();		
+		foreach ($_GET as $key => $value) {
+			if(isset($value) && !in_array($key, $unset)){
+				$queryStirng[$key] = $value;
+			}			
+		} 		
+		$queryStirng = $queryStirng+$query;
+		return http_build_query($queryStirng);
+	}
+}
+/**
+ * [mobi_query_url description]
+ * @return [type] [description]
+ */
+if ( ! function_exists('mobi_query_url')){
+	function mobi_query_url($url,$unset=array(),$query=array()){		
+		$queryStirng = mobi_query_string($unset,$query);
+		$url = base_url($url)."?".$queryStirng;
+		return $url; 
+	}
+}
+/**
+ * [mobi_url description]
+ * @return [type] [description]
+ */
+if ( ! function_exists('mobi_url')){
+	function mobi_url($url,$query=array(),$unset=array()){
+		$url = base_url($url);
+		$queryStirng = array();
+		if(!empty($query)){
+			foreach ($query as $key => $value) {
+				if(isset($value) && !in_array($key, $unset)){
+					$queryStirng[$key] = $value;
+				}	
+			}
+			$url .= '?'.http_build_query($queryStirng);
+		}
+		return $url; 
+	}
+}
+/**
+ * [mobi_format_url description]
+ * @return [type] [description]
+ */
+if ( ! function_exists('mobi_format_url')){
+	function mobi_format_url($url){
+		if(preg_match("/^(http|https)\:\/\/(.*?)/is", $url)){
+			return $url;
+		}else{
+			return "http://".$url;
+		}
+	}
+}

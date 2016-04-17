@@ -113,3 +113,23 @@ if ( ! function_exists('elements'))
 		return $return;
 	}
 }
+
+/* End of file array_helper.php */
+/* Location: ./system/helpers/array_helper.php */
+if ( ! function_exists('mobi_array_rand'))
+{
+	function mobi_array_rand($data=array(),$num=5){
+		$cn = count($data);
+		if($cn > $num){
+			$rkey = array_rand($data,$num);
+			$rkey = is_array($rkey) ? $rkey : array($rkey);
+			$rdata = array();
+			foreach ($rkey as $key => $value) {
+				$rdata[] = $data[$value];
+			}
+			return $rdata;
+		}else{
+			return $data;
+		}
+	}
+}

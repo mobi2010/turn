@@ -408,3 +408,465 @@ if ( ! function_exists('nbs'))
 		return str_repeat('&nbsp;', $num);
 	}
 }
+
+########################author by zsc####################################
+/**
+* [join description]
+* @param  [type] $params      [description]
+* @param  array  $unsetParams [description]
+* @return [type]              [description]
+*/
+if ( ! function_exists('html_join')){
+	function html_join($params,$unsetParams=array()){
+		$html = null;
+		if(!empty($params)) {
+		  foreach ($params as $key => $val) {
+		    if(!in_array($key, $unsetParams) && isset($val)){
+		      $html .= $key.'="'.$val.'" ';
+		    }        
+		  }
+		}
+		return $html;
+	}
+}
+/**
+* [radio description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_img')){
+   function html_img($params){    
+    $img = '<img ';
+    $img .= html_join($params);
+    $img .= ' />';    
+    return $img;     
+  }
+}
+/**
+* [radio description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_radio')){
+   function html_radio($params){
+    $params['id'] = $params['id'] ? $params['id'] : $params['name'];    
+    $position = $params['position'];//0默认后边，1前边 
+    $radio = '<input type="radio" ';
+    $radio .= html_join($params,array('position','text'));
+    $radio .= ' />';    
+    $text = $position ? $params['text'].$radio : $radio.$params['text'];    
+    return html_a(array('text'=>$text,'class'=>'html-radio','data-value'=>$params['value'],'data-id'=>$params['id'],'data-name'=>$params['name']));
+  }
+}
+/**
+* [tags description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_tags')){
+    function html_tags($params){
+    	$html = null;
+    	$class = $params['class'] ? "html-tags ".$params['class'] : "html-tags";
+	  	if(!empty($params['options'])) {
+	    	foreach ($params['options'] as $key => $val) {	
+	    		$rparams = array();    		
+	    		$rparams['text'] = $params['sval'] ? $val[$params['sval']] : $val;
+	    		$rparams['data-value'] = $params['skey'] ? $val[$params['skey']] : $key;
+	    		$rparams['data-name'] = $params['name'];
+	    		$rparams['id'] = $params['name']."_".$rparams['data-value'];
+	    		$rparams['class'] = isset($params['checked']) && $params['checked'] == $rparams['data-value'] ? $class.' checked' : $class;
+	    		$rparams['href'] = $params['href'] ? $params['href']."&{$params['name']}=".$rparams['data-value'] : $params['href'];
+	    		$html .= html_a($rparams).$params['blank'];
+	    	}
+	    }	
+	    $html .= html_hidden(array('name'=>$params['name'],'value'=>$params['checked']));
+		return $html;
+  }
+}
+/**
+* [radios description]
+* @param  [type] $params [description]
+*  $radios['options'] =  array('原创','转载');
+*  $radios['options'] =  array('原创','转载');
+*  $radios['name'] = 'radios';
+*  $radios['checked'] = 1;
+*  $radios['blank'] = “&nbsp”;//间隔
+*  html_radios($radios);   
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_radios')){
+   function html_radios($params){
+	  	$html = null;
+	  	if(!empty($params['options'])) {
+	    	foreach ($params['options'] as $key => $val) {	
+	    		$rparams = array();    		
+	    		$rparams['name'] = $params['name'];
+	    		$rparams['text'] = $params['sval'] ? $val[$params['sval']] : $val;
+	    		$rparams['value'] = $params['skey'] ? $val[$params['skey']] : $key;
+	    		$rparams['id'] = $params['name']."_".$rparams['value'];
+	    		$rparams['checked'] = $params['checked'] == $rparams['value'] ? 'checked' : null;
+	    		$html .= html_radio($rparams).$params['blank'];
+	    	}
+	    }	
+	    return $html;
+	  }
+}
+/**
+* [text description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_text')){
+   function html_text($params){
+  	$params['id'] = $params['id'] ? $params['id'] : $params['name'];
+    $text = '<input type="text" ';
+    $text .= html_join($params);
+    $text .= '/>';
+  	return $text; 
+  }
+}
+/**
+* [text description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_password')){
+   function html_password($params){
+  	$params['id'] = $params['id'] ? $params['id'] : $params['name'];
+    $text = '<input type="password" ';
+    $text .= html_join($params);
+    $text .= '/>';
+  	return $text; 
+  }
+}
+/**
+* [text description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_hidden')){
+	function html_hidden($params){
+		$params['id'] = $params['id'] ? $params['id'] : $params['name'];		
+		$params['autocomplete'] = "off";
+		$text = '<input type="hidden" ';
+		$text .= html_join($params);
+		$text .= '/>';
+		return $text; 
+	}
+}
+/**
+* [textarea description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_textarea')){
+	function html_textarea($params){
+		$value = $params['value'];
+		$params['id'] = $params['id'] ? $params['id'] : $params['name'];
+		$text = '<textarea ';
+		$text .= html_join($params,array('value'));
+		$text .= '>';
+		$text .= $value;
+		$text .= '</textarea>';
+		return $text; 
+	}
+}
+/**
+* [text description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_hiddens')){
+	function html_hiddens($params){
+		$html = null;
+		foreach ($params as $key => $value) {     
+		  $html .= html_hidden(array('name'=>$key,'value'=>$value));
+		}
+		return $html; 
+	}
+}
+/**
+* [a description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_a')){
+	function html_a($params){
+		$href = $params['href'] ? $params['href'] : 'javascript:;';
+		$text = $params['text'];
+		$a = '<a href="'.$href.'" ';
+		$a .= html_join($params,array('href','text'));
+		$a .= ' >'.$text.'</a>';
+		return $a;
+	}
+}
+
+/**
+* [select description]
+* @param  [type] $params [description]
+* options 选项数据
+* selected 选中项 
+* sval option 的 text
+* skey option 的 value
+* 
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_select')){
+	function html_select($params){
+		$select = null;
+		$options = $params['options'];
+		if(!empty($options)){			
+			$selected = $params['selected'];
+			$params['id'] = $params['id'] ? $params['id'] : $params['name'];
+			$select .= '<select ';
+			$select .= html_join($params,array('options','selected','sval','sval'));		
+			$select .= '>';			
+			foreach ($options as $key => $val) {
+				$optionValue = $params['skey'] ? $val[$params['skey']] : $key;
+				$optionText = $params['sval'] ? $val[$params['sval']] : $val;
+				$select .= '<option value="'.$optionValue.'"';
+				$select .= $key == $selected ? ' selected="selected"' : null;
+				$select .= '>'.$optionText.'</option>';
+			}
+			$select .= '</select>';
+		}
+		return $select;
+	}
+}
+/**
+* [checkbox description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_checkbox')){
+	function html_checkbox($params){
+		$params['id'] = $params['id'] ? $params['id'] : $params['name'];
+		$checkbox ='<input type="checkbox" ';
+		$checkbox .= html_join($params,array('position','text','checked'));
+		$checkbox .= $params['checked'] ? ' checked="checked" ' : null;
+		$checkbox .= '/>';
+		$text = $params['text'];
+		$position = $params['position'];//0默认后边，1前边 
+		return $position ? $text.$checkbox : $checkbox.$text;
+	}
+}
+/**
+* [submit description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_submit')){
+   function html_submit($params=array()){
+    $params['id'] = $params['id'] ? $params['id'] : $params['name'];
+    $params['value'] = $params['value'] ? $params['value'] : '提交';
+    $submit ='<input type="submit" ';
+    $submit .= html_join($params);
+    $submit .= '/>';
+    return $submit;
+  }
+}
+/**
+* [html_button description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_button')){
+   function html_button($params=array()){
+	    $params['id'] = $params['id'] ? $params['id'] : $params['name'];
+	    $params['value'] = $params['value'] ? $params['value'] : '提交';
+	    $submit ='<input type="button" ';
+	    $submit .= html_join($params);
+	    $submit .= '/>';
+	    return $submit;
+  }
+}
+/**
+* [html_table description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_table')){
+   function html_table($params=array()){	   
+	    $html ='<table ';
+	    $html .= html_join($params,array('body'));
+	    $html .= '>';
+	    $html .= $params['body'];
+	    $html .= '</table>';
+	    return $html;
+  }
+}
+/**
+* [html_tr description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_tr')){
+	function html_tr($params=array()){	   
+	    $html ='<tr ';
+	    $html .= html_join($params,array('body'));
+	    $html .= '>';
+	    $html .= $params['body'];
+	    $html .= '</tr>';
+	    return $html;
+	}
+}
+/**
+* [html_th description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_th')){
+	function html_th($params=array()){	   
+	    $html ='<th ';
+	    $html .= html_join($params,array('body'));
+	    $html .= '>';
+	    $html .= $params['body'];
+	    $html .= '</th>';
+	    return $html;
+	}
+}
+/**
+* [html_td description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_td')){
+	function html_td($params=array()){	   
+	    $html ='<td ';
+	    $html .= html_join($params,array('body'));
+	    $html .= '>';
+	    $html .= $params['body'];
+	    $html .= '</td>';
+	    return $html;
+	}
+}
+/**
+* [html_form description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_form')){
+	function html_form($params=array()){	   
+	    $html ='<form ';
+	    $html .= html_join($params,array('body'));
+	    $html .= '>';
+	    $html .= $params['body'];
+	    $html .= '</form>';
+	    return $html;
+	}
+}
+/**
+* [html_div description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_div')){
+	function html_div($params=array()){	   
+	    $html ='<div ';
+	    $html .= html_join($params,array('body'));
+	    $html .= '>';
+	    $html .= $params['body'];
+	    $html .= '</div>';
+	    return $html;
+	}
+}
+/**
+* [html_span description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_span')){
+	function html_span($params=array()){	   
+	    $html ='<span ';
+	    $html .= html_join($params,array('body'));
+	    $html .= '>';
+	    $html .= $params['body'];
+	    $html .= '</span>';
+	    return $html;
+	}
+}
+/**
+* [html_dd description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_dd')){
+	function html_dd($params=array()){	   
+	    $html ='<dd ';
+	    $html .= html_join($params,array('body'));
+	    $html .= '>';
+	    $html .= $params['body'];
+	    $html .= '</dd>';
+	    return $html;
+	}
+}
+/**
+* [html_dt description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_dt')){
+	function html_dt($params=array()){	   
+	    $html ='<dt ';
+	    $html .= html_join($params,array('body'));
+	    $html .= '>';
+	    $html .= $params['body'];
+	    $html .= '</dt>';
+	    return $html;
+	}
+}
+/**
+* [html_dl description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_dl')){
+	function html_dl($params=array()){	   
+	    $html ='<dl ';
+	    $html .= html_join($params,array('body'));
+	    $html .= '>';
+	    $html .= $params['body'];
+	    $html .= '</dl>';
+	    return $html;
+	}
+}
+/**
+* [html_qq description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_qq')){
+	function html_qq($qq,$text='在线交谈'){
+		return html_a(array('href'=>'http://wpa.qq.com/msgrd?v=3&uin='.$qq.'&site=qq&menu=yes','target'=>'_blank','class'=>'online-qq','text'=>html_span(array('class'=>'third-icons qq','body'=>"&nbsp;")).$text,'title'=>'QQ:'.$qq));
+	}
+}
+/**
+* [html_weibo description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_weibo')){
+	function html_weibo($weibo,$text='微博交流'){
+		return html_a(array('href'=>mobi_format_url($weibo),'target'=>'_blank','class'=>'online-qq','text'=>html_span(array('class'=>'third-icons weibo','body'=>"&nbsp;")).$text,'title'=>'微博:'.$weibo));
+	}
+}
+/**
+* [html_weixin description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_weixin')){
+	function html_weixin($weixin,$text='微信交流'){
+		return html_a(array('href'=>mobi_format_url($weixin),'target'=>'_blank','class'=>'online-qq','text'=>html_span(array('class'=>'third-icons weixin','body'=>"&nbsp;")).$text,'title'=>'微信:'.$weixin));
+	}
+}
+/**
+* [html_email description]
+* @param  [type] $params [description]
+* @return [type]         [description]
+*/
+if ( ! function_exists('html_email')){
+	function html_email($email,$text='邮箱交流'){
+		return html_a(array('href'=>"mailto:".$email,'target'=>'_blank','class'=>'online-qq','text'=>html_span(array('class'=>'third-icons email','body'=>"&nbsp;")).$text,'title'=>'邮箱:'.$email));
+	}
+}
