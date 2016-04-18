@@ -14,7 +14,42 @@ class File {
     {
     	$this->fileExt = array('.jpg','.png','.jpeg','.gif','.bmp');
     	$this->fileSize = 10*1024*1024;
-    }    
+    }   
+    /**
+     * [保存文件数据]
+     * @param [type] $params [
+     * filePath  [选填] //文件路径，默认当前路径
+     * fileName  [选填] //文件名称，默认0
+     * data      [必填] //数据，string
+     * 
+     * ]
+     */
+    public static function setData( $params = [] ){
+        $filePath = isset($params['filePath']) ? $params['filePath'] : "./";
+        $fileName = isset($params['fileName']) ? $params['fileName'] : "0";
+        $data = isset($params['data']) ? $params['data'] : "";
+        if(!is_dir($filePath)){
+            mkdir($filePath, '0777', TRUE);
+        }
+        $flag = file_put_contents( $filePath."/".$fileName , $data ,FILE_APPEND);
+        return $flag;
+    }
+    /**
+     * [获取文件数据]
+     * @param [type] $params [
+     * filePath  [选填] //文件路径，默认当前路径
+     * fileName  [选填] //文件名称，默认0
+     * ]
+     */
+    public static function getData( $params = [] ){
+        $filePath = isset($params['filePath']) ? $params['filePath'] : "./";
+        $fileName = isset($params['fileName']) ? $params['fileName'] : "0";
+        if (file_exists($fileName)) {
+            return file_get_contents( $filePath."/".$fileName , $data );
+        } else {
+            echo "The file $filename does not exist";exit;
+        }
+    } 
     /**
      * [文件名]
      * @param  [type] $filename [description]

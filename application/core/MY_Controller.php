@@ -1,5 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+set_time_limit(0);
 
 date_default_timezone_set('PRC');//设置中国标准时区 
 error_reporting(E_ALL ^ E_NOTICE);//显示运行时错误

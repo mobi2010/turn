@@ -1,0 +1,58 @@
+#https://www.jisilu.cn/data/sfnew/fundm_list/?___t=1460995595436
+
+#母基代码  base_fund_id    160127
+#母基名称  base_fund_nm    南方消费
+#基金管理人  fund_company_nm    南方基金
+#创立日期  issue_dt    2012-03-13
+#到期日  maturity_dt    -
+#跟踪指数代码  index_id    399942
+#跟踪指数  index_nm    主动基金
+#上折  upper_recalc_price    定折归一
+#下折  lower_recalc_price    0.20
+#A基代码  fundA_id    150049
+#A基名称  fundA_nm    消费收益
+#利率规则  coupon_descr_s    +3.2%
+#本期利率  coupon    4.70
+#下期利率  coupon_next    4.70    
+#B基代码  fundB_id    150050
+#B基名称  fundB_nm    消费进取
+#母基净值  price    1.1280
+#净值日期  last_chg_dt    2016-04-18
+#下折需跌  base_lower_recalc_rt    46.59%
+#整体溢价率  base_est_dis_rt    -0.67%
+#A:B  abrate    5:5
+#产品网址  notes    http://www.nffund.com/new/fundproduct/?action=searchjjfl&fundcode=160127&index=2
+#申购费用  apply_fee_tip    100万以下，1.5% 100万（含）至500万，0.9% 500万（含）至1000万，0.3% 1000万（含）以上，每笔1000元 
+#赎回费用  redeem_fee_tip    持有1年以下，0.5% 持有1年至2年，0.3% 持有2年以上，0
+
+
+
+coupon_next2
+b_gangan    1.803
+fund_manager    蒋秋洁
+list_dt    2012-04-25
+manage_fee    1.750
+left_year    永续
+base_est_dis_rt_tip 
+active_fl    Y
+mtrade    N
+market    sz
+mflag    Y
+asset_ratio    80.000
+fully    Y
+a_ratio    5
+b_ratio    5
+fund_descr    03/13，定折时A/B/M全归1，可顺延定折日
+next_recalc_dt    2017-03-13
+next_recalc_dt2    
+coupon_descr    +3.2%，动态调整
+lower_recalc_comment    B类净值低于
+a_amount    
+a_amount_increase_rt    
+status_cd    N
+recalc_to    
+calc_info    
+apply_fee    1.5%
+
+redeem_fee    0.5%
+min_apply_amount    

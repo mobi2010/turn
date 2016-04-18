@@ -1,0 +1,46 @@
+#https://www.jisilu.cn/data/sfnew/funda_list/?___t=1460995526408
+
+
+#利率规则  coupon_descr_s    +3.5% 
+#成交额（万元）  funda_volume    4567.64
+#指数涨幅  funda_index_increase_rt    -1.35%
+#下折母基需跌  funda_lower_recalc_rt    32.23%
+#上折母基需涨  fundb_upper_recalc_rt    82.37%
+#涨幅  funda_increase_rt    -0.79%
+#剩余年限  funda_left_year    永续
+#代码  funda_id    150175
+#名称  funda_name    H股A
+#现价  funda_current_price    0.882
+#净值  funda_value    1.0184
+#折价率  funda_discount_rt    13.39%
+#本期利率  funda_coupon    5.00
+#下期利率  funda_coupon_next    5.00
+#修正收益率  funda_profit_rt_next    5.790%
+#参考指数代码  funda_index_id    HSCEI
+#参考指数  funda_index_name    恒生国企
+#A:B  abrate    5:5
+#整体溢价率  funda_base_est_dis_rt    -0.91%
+#下次定折  next_recalc_dt    2016-12-01
+#理论下折收益  lower_recalc_profit_rt    -
+#A新增（万分）  funda_amount    328281
+#T-1溢价率  funda_base_est_dis_rt_t1    -0.55%
+#T-2溢价率  funda_base_est_dis_rt_t2    -0.53%
+#日期  funda_nav_dt    2016-04-15
+
+
+
+
+
+owned    0
+coupon_descr    +3.5%
+calc_info   
+funda_base_fund_id    161831
+last_time    15:00:25
+funda_profit_rt    5.79%
+base_est_dis_rt_tip    
+fund_descr    每年12月第一个工作日定折，无下折，净值<1元无定折
+left_recalc_year    0.62192
+status_cd    N
+funda_amount_increase    -4671
+funda_amount_increase_rt    -1.40%
+price_tips    现价:0.882; 最后更新时间:15:00:25

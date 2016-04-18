@@ -1,0 +1,19 @@
+#https://www.jisilu.cn/jisiludata/StockFenJiDetail.php?qtype=hist&display=table&fund_id=160718&___t=1460998386868
+
+
+#日期  price_dt: "2015-05-28", 
+#母基ID  base_fund_id: "164818", 
+#A价格  a_price: "1.000",       
+#A涨幅  a_price_increase_rt: "0.00%", 
+#A收益率  a_profit_rt: "6.260%",   
+#A份额（万份） a_amount: "53181", 
+#A新增（万份） a_amount_increase: "-", 
+#A增长  a_amount_increase_rt: "0.000%", 
+#A折价率  a_discount_rt: "0.140%",      
+#B溢价率  b_discount_rt: "0.402%", 
+#B净值杠杆  b_net_leverage_rt: "2.005", 
+#B价格杠杆  b_price_leverage_rt: "1.997",  
+#合并溢价  base_discount_rt: "0.130%", 
+#母基净值  net_value: "0.9987", 
+#母基估值  base_est_val: "1.0002", 
+#估值误差  est_err: "0.15%"  

@@ -1,0 +1,49 @@
+#https://www.jisilu.cn/data/sfnew/fundb_list/?___t=1460995573504
+
+#代码  fundb_id    150033
+#名称  fundb_name    多利进取
+#利率规则  coupon_descr_s    5.0%
+#现价  fundb_current_price    0.911
+#涨幅  fundb_increase_rt    -1.94%
+#成交额（万元） fundb_volume    4.48
+#净值  fundb_value    0.9508
+#日期  fundb_nav_dt    2016-04-18
+#溢价率  fundb_discount_rt    -4.19%
+#价格杠杆  fundb_price_leverage_rt    5.449
+#净值杠杆  fundb_net_leverage_rt    5.221
+#融资成本  fundb_capital_rasising_rt    25.73%
+#下折母基金需跌  fundb_lower_recalc_rt    11.10%
+#上折母基金需涨  fundb_upper_recalc_rt    -
+#剩余年限  fundb_left_year    永续
+#估值  b_est_val    0.962
+#参考指数代码  fundb_index_id    399923
+#参考指数  fundb_index_name    债券总指
+#指数涨幅  fundb_index_increase_rt    0.03%
+#母基净值  fundb_base_price    0.9928
+#整体溢价率  fundb_base_est_dis_rt    -0.58%
+
+
+
+fundb_base_fund_id    160718
+funda_id    150032
+funda_name    多利优先
+status_cd    N
+recalc_to    
+calc_info    
+upper_recalc_price    
+maturity_dt    
+coupon_descr    固定5.0%
+funda_current_price    1.006
+funda_upper_price    1.108
+funda_lower_price    0.906
+funda_increase_rt    -0.10
+fundb_upper_price    1.022
+fundb_lower_price    0.836
+funda_ratio    8
+fundb_ratio    2
+last_time    14:58:39
+owned    0
+asset_ratio_last    1200%
+fundb_unit_capital_rasising_rt    5.78%
+#A:B  abrate    8:2
+fundb_base_est_dis_rt_tip 
