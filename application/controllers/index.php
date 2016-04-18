@@ -63,6 +63,8 @@ class Index extends MY_Controller {
 		#t-1 溢价率 funda_base_est_dis_rt_t1   -0.55%
 		#t-1 溢价率 funda_base_est_dis_rt_t2   -0.53%
         var_dump($this->turnModel->dataFetchCount(['table'=>'funda']));
+
+        
         exit;
 		$jslAurl = 'https://www.jisilu.cn/data/sfnew/funda_list/?___t=1460907677920';
 		$httpData = $this->curl->post(['url'=>$jslAurl,'data'=>['rp'=>50]]);
