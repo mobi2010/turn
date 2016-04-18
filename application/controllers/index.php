@@ -64,7 +64,7 @@ class Index extends MY_Controller {
 		#A份额（万份） funda_amount   332952
 		#t-1 溢价率 funda_base_est_dis_rt_t1   -0.55%
 		#t-1 溢价率 funda_base_est_dis_rt_t2   -0.53%
-        var_dump($this->turnModel->dataFetchCount(['table'=>'funda']));
+        //var_dump($this->turnModel->dataFetchCount(['table'=>'funda']));
 
         #==========母基金列表=========】
         #https://www.jisilu.cn/jisiludata/StockFenJiDetail.php?fund_id=164818&___t=1460974071731
@@ -85,10 +85,11 @@ class Index extends MY_Controller {
 		// base_est_val: "1.0002", 母基估值
 		// est_err: "0.15%"  估值误差
 
-        exit;
-		$jslAurl = 'https://www.jisilu.cn/data/sfnew/funda_list/?___t=1460907677920';
-		$httpData = $this->curl->post(['url'=>$jslAurl,'data'=>['rp'=>50]]);
+        //exit;
+		$jslAurl = 'https://www.jisilu.cn/data/sfnew/arbitrage_vip_list/?___t=1460976897283';
+		$httpData = $this->curl->post(['url'=>$jslAurl,'fund_id'=>164819]);
 		$httpArray = json_decode($httpData,true);
+		var_dump($httpData,$httpArray);exit;
 		foreach ($httpArray['rows'] as $key => $value) {
 			$cell = $value['cell'];
 			foreach ($cell as $key2 => $value2) {

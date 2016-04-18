@@ -45,7 +45,7 @@ class Curl
 	    curl_setopt_array($ch, ($option + $defaults));
 	    if( ! $result = curl_exec($ch))
 	    {
-	        trigger_error(curl_error($ch));
+	        echo curl_error($ch);
 	    }
 	    curl_close($ch);
 	    return $result;
@@ -89,7 +89,7 @@ class Curl
 	    curl_setopt_array($ch, ($option + $defaults));
 	    if( ! $result = curl_exec($ch))
 	    {
-	        trigger_error(curl_error($ch));
+	        echo curl_error($ch);
 	    }
 	    curl_close($ch);
 	    return $result;
@@ -134,7 +134,7 @@ class Curl
 	    curl_setopt_array($ch, ($option + $defaults));
 	    if( ! $result = curl_exec($ch))
 	    {
-	        trigger_error(curl_error($ch));
+	        echo curl_error($ch);
 	    }
 	    curl_close($ch);
 	    return $result;
@@ -168,7 +168,7 @@ class Curl
 	    curl_setopt_array($ch, ($option + $defaults));
 	    if( ! $result = curl_exec($ch))
 	    {
-	        curl_error($ch);
+	        echo curl_error($ch);
 	    }
 	    curl_close($ch);
 	    return $result;
