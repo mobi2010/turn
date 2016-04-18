@@ -35,6 +35,8 @@ class Index extends MY_Controller {
 	}
 
 	public function fundaData(){
+		#===========分级A============
+		#https://www.jisilu.cn/data/sfnew/funda_list/?___t=1460907677920
 		#套利规则 coupon_descr_s   +3.5%
 		#成交额（万元） funda_volume   2877.78
 		#指数涨幅 funda_index_increase_rt   0.00%
@@ -64,7 +66,25 @@ class Index extends MY_Controller {
 		#t-1 溢价率 funda_base_est_dis_rt_t2   -0.53%
         var_dump($this->turnModel->dataFetchCount(['table'=>'funda']));
 
-        
+        #==========母基金列表=========】
+        #https://www.jisilu.cn/jisiludata/StockFenJiDetail.php?fund_id=164818&___t=1460974071731
+		// price_dt: "2015-05-28", 日期
+		// base_fund_id: "164818", 母基ID
+		// a_price: "1.000",       A价格
+		// a_price_increase_rt: "0.00%", A涨幅
+		// a_profit_rt: "6.260%",   A收益率
+		// a_amount: "53181", A份额（万份）
+		// a_amount_increase: "-", A新增（万份）
+		// a_amount_increase_rt: "0.000%", A增长
+		// a_discount_rt: "0.140%",   A折价率   
+		// b_discount_rt: "0.402%", B溢价率
+		// b_net_leverage_rt: "2.005", B净值杠杆
+		// b_price_leverage_rt: "1.997",  B价格杠杆
+		// base_discount_rt: "0.130%", 合并溢价
+		// net_value: "0.9987", 母基净值
+		// base_est_val: "1.0002", 母基估值
+		// est_err: "0.15%"  估值误差
+
         exit;
 		$jslAurl = 'https://www.jisilu.cn/data/sfnew/funda_list/?___t=1460907677920';
 		$httpData = $this->curl->post(['url'=>$jslAurl,'data'=>['rp'=>50]]);
