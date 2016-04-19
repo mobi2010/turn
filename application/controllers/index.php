@@ -3,47 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Index extends MY_Controller {
 	public $sourceData;
-	public $filePath;
 	function __construct($params = array())
 	{
 		parent::__construct(array('auth'=>false));
 		$this->load->library('curl');
 		$this->load->library('file');
-
-		$this->sourceData['fundm'] = ['url'=>'https://www.jisilu.cn/data/sfnew/fundm_list/?___t=1460995595436'];
-		$this->sourceData['funda'] = ['url'=>'https://www.jisilu.cn/data/sfnew/funda_list/?___t=1460995526408'];
-		$this->sourceData['fundb'] = ['url'=>'https://www.jisilu.cn/data/sfnew/fundb_list/?___t=1460995573504'];
-
-		$this->filePath = './backup/data/'.date("Y-m-d").'/';
-
-
-		$fundaFields = [
-			'funda_id'=>['title'=>'代码'],  
-			'funda_name'=>['title'=>'名称'],  
-			'coupon_descr_s'=>['title'=>'利率规则'],  
-			'funda_volume'=>['title'=>'成交额（万元）'],  
-			'funda_index_increase_rt'=>['title'=>'指数涨幅'],  
-			'funda_lower_recalc_rt'=>['title'=>'下折母基需跌'],  
-			'fundb_upper_recalc_rt'=>['title'=>'上折母基需涨'],  
-			'funda_increase_rt'=>['title'=>'涨幅'],  
-			'funda_left_year'=>['title'=>'剩余年限'],  
-			'funda_current_price'=>['title'=>'现价'],  
-			'funda_value'=>['title'=>'净值'],  
-			'funda_discount_rt'=>['title'=>'折价率'],  
-			'funda_coupon'=>['title'=>'本期利率'],  
-			'funda_coupon_next'=>['title'=>'下期利率'],  
-			'funda_profit_rt_next'=>['title'=>'修正收益率'],  
-			'funda_index_id'=>['title'=>'参考指数代码'],  
-			'funda_index_name'=>['title'=>'参考指数'],  
-			'abrate'=>['title'=>'A:B'],  
-			'funda_base_est_dis_rt'=>['title'=>'整体溢价率'],  
-			'next_recalc_dt'=>['title'=>'下次定折'],  
-			'lower_recalc_profit_rt'=>['title'=>'理论下折收益'],  
-			'funda_amount'=>['title'=>'A新增（万分）'],  
-			'funda_base_est_dis_rt_t1'=>['title'=>'T-1溢价率'],  
-			'funda_base_est_dis_rt_t2'=>['title'=>'T-2溢价率'],  
-			'funda_nav_dt'=>['title'=>'日期']
-		];
 	}
 
 	/**
@@ -63,24 +27,82 @@ class Index extends MY_Controller {
 	 */
 	public function index()
 	{	
+		// echo date("Y-m-d H:i:s",'1460995573');
+		//抓数据
+		$this->fetchFunda(['date'=>'2016-04-17']);
+		// $this->fetchFundb();
+		// $this->fetchFundm();
 		
-		//抓取数据
-		//$this->fetchBaseData();
+		//导入
+		// $this->dataFunda(['date'=>'2016-04-19']);
+		//$this->dataFundb(['date'=>'2016-04-19']);
+		//$this->dataFundm(['date'=>'2016-04-19']);
 		
-		//抓取列表数据
-		// $this->fetchListData();
 
-		//获取本地数据
-		// foreach ($this->sourceData as $key => $value) {
-		// 	$data = $this->getData($this->filePath.$key.".json");
-		// 	var_dump($data);exit;
-		// }
+		$this->load->view('fund/header',$data);
+		$this->load->view('fund/fetch_data');
+		$this->load->view('fund/footer');
+	}
+	/**
+	 * 母基数据
+	 * 
+	 * @return [type] [description]
+	 */
+	public function dataFundm($params=[]){
+		$jsonPath = $this->getJsonPath($params);
+		$data = $this->getData($jsonPath.'fundm.json');
+		$dataFunda = $this->initData['dataFundm'];
+		if(!empty($data)){
+			foreach ($data['rows'] as $key => $value) {
+				$cell = $value['cell'];
+				$fields = [];
+				foreach ($dataFunda['fields'] as $key => $value) {
+					$fields[$key] = mobi_string_filter($cell[$key]);
+				}
+				$fields['update_time'] = time();
+				$where = "base_fund_id={$fields['base_fund_id']} and last_chg_dt='{$fields['last_chg_dt']}'";
+				$row = $this->turnModel->dataFetchRow(['table'=>'fundm','where'=>$where]);
+				if(empty($row)){
+					$id = $this->turnModel->dataInsert(['table'=>'fundm','data'=>$fields]);
+					echo "new id {$id} <br/>";
+				}else{
+					$this->turnModel->dataUpdate(['table'=>'fundm','data'=>$fields,'where'=>$row['id']]);
+					echo "update id {$row['id']} <br/>";
+				}
+			}
+		}
+		echo "done";
+	}
 
-
-		
-		// $this->load->view('fund/header',$data);
-		// $this->load->view('fund/fetch_data');
-		// $this->load->view('fund/footer');
+	/**
+	 * B基数据
+	 * 
+	 * @return [type] [description]
+	 */
+	public function dataFundb($params=[]){
+		$jsonPath = $this->getJsonPath($params);
+		$data = $this->getData($jsonPath.'fundb.json');
+		$dataFunda = $this->initData['dataFundb'];
+		if(!empty($data)){
+			foreach ($data['rows'] as $key => $value) {
+				$cell = $value['cell'];
+				$fields = [];
+				foreach ($dataFunda['fields'] as $key => $value) {
+					$fields[$key] = mobi_string_filter($cell[$key]);
+				}
+				$fields['update_time'] = time();
+				$where = "fundb_id={$fields['fundb_id']} and fundb_nav_dt='{$fields['fundb_nav_dt']}'";
+				$row = $this->turnModel->dataFetchRow(['table'=>'fundb','where'=>$where]);
+				if(empty($row)){
+					$id = $this->turnModel->dataInsert(['table'=>'fundb','data'=>$fields]);
+					echo "new id {$id} <br/>";
+				}else{
+					$this->turnModel->dataUpdate(['table'=>'fundb','data'=>$fields,'where'=>$row['id']]);
+					echo "update id {$row['id']} <br/>";
+				}
+			}
+		}
+		echo "done";
 	}
 
 	/**
@@ -88,36 +110,47 @@ class Index extends MY_Controller {
 	 * 
 	 * @return [type] [description]
 	 */
-	public function fundaData(){
-		$data = $this->getData($this->filePath."funda.json");
-		$fields = [];
-
-
-
-
+	public function dataFunda($params=[]){
+		$jsonPath = $this->getJsonPath($params);
+		$data = $this->getData($jsonPath.'funda.json');
+		$dataFunda = $this->initData['dataFunda'];
 		if(!empty($data)){
 			foreach ($data['rows'] as $key => $value) {
 				$cell = $value['cell'];
-				
+				$fields = [];
+				foreach ($dataFunda['fields'] as $key => $value) {
+					$fields[$key] = mobi_string_filter($cell[$key]);
+				}
+				$fields['update_time'] = time();
+				$where = "funda_id={$fields['funda_id']} and funda_nav_dt='{$fields['funda_nav_dt']}'";
+				$row = $this->turnModel->dataFetchRow(['table'=>'funda','where'=>$where]);
+				if(empty($row)){
+					$id = $this->turnModel->dataInsert(['table'=>'funda','data'=>$fields]);
+					echo "new id {$id} <br/>";
+				}else{
+					$this->turnModel->dataUpdate(['table'=>'funda','data'=>$fields,'where'=>$row['id']]);
+					echo "update id {$row['id']} <br/>";
+				}
 			}
-			$data['rows'] = "";
 		}
-		var_dump($this->filePath."funda.json",$data);
-
+		echo "done";
 	}
+
+
 	/**
 	 * 抓取列表数据
 	 * @return [type] [description]
 	 */
-	public function fetchListData(){
-		$data = $this->getData($this->filePath."fundm.json");
+	public function fetchFundl($params=[]){
+		$jsonPath = $this->getJsonPath($params);
+		$data = $this->getData($jsonPath.'fundm.json');
 		foreach ($data['rows'] as $key => $value) {
 			$fundm_id = $value['id'];
 			$url = "https://www.jisilu.cn/jisiludata/StockFenJiDetail.php?qtype=hist&display=table&fund_id={$fundm_id}&___t=".time();
 			$httpData = $this->curl->get(['url'=>$url]);
 			if($httpData){
 				echo $url."<br/>";
-				$this->file->setData(['filePath'=>$this->filePath,'fileName'=>$fundm_id.'.json','data'=>$httpData,'flag'=>0]);
+				$this->file->setData(['filePath'=>$jsonPath,'fileName'=>$fundm_id.'.json','data'=>$httpData,'flag'=>0]);
 			}else{
 				echo "get {$fundm_id} data fail";
 				exit;
@@ -129,22 +162,60 @@ class Index extends MY_Controller {
 	}
 
 	/**
-	 * 抓取基础数据
+	 * 抓取母基
 	 * @return [type] [description]
 	 */
-	public function fetchBaseData(){
-		foreach ($this->sourceData as $key => $value) {
-			$url = $value['url'];
-			$httpData = $this->curl->get(['url'=>$url]);
-			if($httpData){
-				echo $url."<br/>";
-				$this->file->setData(['filePath'=>$this->filePath,'fileName'=>$key.'.json','data'=>$httpData,'flag'=>0]);
-			}else{
-				echo "get {$key} data fail";
-				exit;
-			}
+	public function fetchFundm($params=[]){
+		$key = "fundm";
+		$dataFunda = $this->initData['dataFundm'];
+		$url = $dataFunda['fetchUrl'].$this->getMicrotime($params);
+		$httpData = $this->curl->get(['url'=>$url]);
+		$jsonPath = $this->getJsonPath($params);
+		if($httpData){
+			echo $url."<br/>";
+			$this->file->setData(['filePath'=>$jsonPath,'fileName'=>$key.'.json','data'=>$httpData,'flag'=>0]);
+		}else{
+			echo "get {$key} data fail";
+			exit;
 		}
-		echo "done!";
+	}
+
+	/**
+	 * 抓取B基
+	 * @return [type] [description]
+	 */
+	public function fetchFundb($params=[]){
+		$key = "fundb";
+		$dataFunda = $this->initData['dataFundb'];
+		$url = $dataFunda['fetchUrl'].$this->getMicrotime($params);
+		$httpData = $this->curl->get(['url'=>$url]);
+		$jsonPath = $this->getJsonPath($params);
+		if($httpData){
+			echo $url."<br/>";
+			$this->file->setData(['filePath'=>$jsonPath,'fileName'=>$key.'.json','data'=>$httpData,'flag'=>0]);
+		}else{
+			echo "get {$key} data fail";
+			exit;
+		}
+	}
+	
+	/**
+	 * 抓取A基
+	 * @return [type] [description]
+	 */
+	public function fetchFunda($params=[]){
+		$key = "funda";
+		$dataFunda = $this->initData['dataFunda'];
+		$url = $dataFunda['fetchUrl'].$this->getMicrotime($params);
+		$httpData = $this->curl->get(['url'=>$url]);
+		$jsonPath = $this->getJsonPath($params);
+		if($httpData){
+			echo $url."<br/>";
+			$this->file->setData(['filePath'=>$jsonPath,'fileName'=>$key.'.json','data'=>$httpData,'flag'=>0]);
+		}else{
+			echo "get {$key} data fail";
+			exit;
+		}
 	}
 
 	/**
@@ -157,5 +228,29 @@ class Index extends MY_Controller {
 		$data = json_decode($json,true);
 		return $data;
 	}
+
+	/**
+	 * 获取jsonPath
+	 * @param  array  $params [description]
+	 * @return [type]         [description]
+	 */
+	public function getJsonPath($params=[]){
+		$date = $params['date'] ? $params['date'] : date("Y-m-d");
+		$fileName = $params['fileName'] ? $params['fileName'] : "";
+		$jsonPath = APPPATH."/assets/json/{$date}/{$fileName}";
+		return $jsonPath;
+	}
 	
+	/**
+	 * 获取毫秒
+	 * @param  array  $params [description]
+	 * @return [type]         [description]
+	 */
+	public function getMicrotime($params=[]) {
+       list($microtime, $time) = explode(' ', microtime());
+       $time = $params['date'] ? strtotime($params['date']." 00:06:13") : time();
+       $res = $time.substr($microtime,2,3);
+       return 1460995573504;
+       return $res;
+	}
 }
