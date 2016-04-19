@@ -1,6 +1,7 @@
 #https://www.jisilu.cn/data/sfnew/funda_list/?___t=1460995526408
 
-
+#代码  funda_id    150175
+#名称  funda_name    H股A
 #利率规则  coupon_descr_s    +3.5% 
 #成交额（万元）  funda_volume    4567.64
 #指数涨幅  funda_index_increase_rt    -1.35%
@@ -8,8 +9,6 @@
 #上折母基需涨  fundb_upper_recalc_rt    82.37%
 #涨幅  funda_increase_rt    -0.79%
 #剩余年限  funda_left_year    永续
-#代码  funda_id    150175
-#名称  funda_name    H股A
 #现价  funda_current_price    0.882
 #净值  funda_value    1.0184
 #折价率  funda_discount_rt    13.39%

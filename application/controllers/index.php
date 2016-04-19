@@ -14,7 +14,36 @@ class Index extends MY_Controller {
 		$this->sourceData['funda'] = ['url'=>'https://www.jisilu.cn/data/sfnew/funda_list/?___t=1460995526408'];
 		$this->sourceData['fundb'] = ['url'=>'https://www.jisilu.cn/data/sfnew/fundb_list/?___t=1460995573504'];
 
-		$this->filePath = './backup/data/2016-04-18/';
+		$this->filePath = './backup/data/'.date("Y-m-d").'/';
+
+
+		$fundaFields = [
+			'funda_id'=>['title'=>'代码'],  
+			'funda_name'=>['title'=>'名称'],  
+			'coupon_descr_s'=>['title'=>'利率规则'],  
+			'funda_volume'=>['title'=>'成交额（万元）'],  
+			'funda_index_increase_rt'=>['title'=>'指数涨幅'],  
+			'funda_lower_recalc_rt'=>['title'=>'下折母基需跌'],  
+			'fundb_upper_recalc_rt'=>['title'=>'上折母基需涨'],  
+			'funda_increase_rt'=>['title'=>'涨幅'],  
+			'funda_left_year'=>['title'=>'剩余年限'],  
+			'funda_current_price'=>['title'=>'现价'],  
+			'funda_value'=>['title'=>'净值'],  
+			'funda_discount_rt'=>['title'=>'折价率'],  
+			'funda_coupon'=>['title'=>'本期利率'],  
+			'funda_coupon_next'=>['title'=>'下期利率'],  
+			'funda_profit_rt_next'=>['title'=>'修正收益率'],  
+			'funda_index_id'=>['title'=>'参考指数代码'],  
+			'funda_index_name'=>['title'=>'参考指数'],  
+			'abrate'=>['title'=>'A:B'],  
+			'funda_base_est_dis_rt'=>['title'=>'整体溢价率'],  
+			'next_recalc_dt'=>['title'=>'下次定折'],  
+			'lower_recalc_profit_rt'=>['title'=>'理论下折收益'],  
+			'funda_amount'=>['title'=>'A新增（万分）'],  
+			'funda_base_est_dis_rt_t1'=>['title'=>'T-1溢价率'],  
+			'funda_base_est_dis_rt_t2'=>['title'=>'T-2溢价率'],  
+			'funda_nav_dt'=>['title'=>'日期']
+		];
 	}
 
 	/**
@@ -36,7 +65,7 @@ class Index extends MY_Controller {
 	{	
 		
 		//抓取数据
-		// $this->fetchBaseData();
+		//$this->fetchBaseData();
 		
 		//抓取列表数据
 		// $this->fetchListData();
@@ -55,6 +84,28 @@ class Index extends MY_Controller {
 	}
 
 	/**
+	 * 分级A数据
+	 * 
+	 * @return [type] [description]
+	 */
+	public function fundaData(){
+		$data = $this->getData($this->filePath."funda.json");
+		$fields = [];
+
+
+
+
+		if(!empty($data)){
+			foreach ($data['rows'] as $key => $value) {
+				$cell = $value['cell'];
+				
+			}
+			$data['rows'] = "";
+		}
+		var_dump($this->filePath."funda.json",$data);
+
+	}
+	/**
 	 * 抓取列表数据
 	 * @return [type] [description]
 	 */
@@ -66,7 +117,7 @@ class Index extends MY_Controller {
 			$httpData = $this->curl->get(['url'=>$url]);
 			if($httpData){
 				echo $url."<br/>";
-				$this->file->setData(['filePath'=>$this->filePath,'fileName'=>$fundm_id.'.json','data'=>$httpData]);
+				$this->file->setData(['filePath'=>$this->filePath,'fileName'=>$fundm_id.'.json','data'=>$httpData,'flag'=>0]);
 			}else{
 				echo "get {$fundm_id} data fail";
 				exit;
@@ -87,7 +138,7 @@ class Index extends MY_Controller {
 			$httpData = $this->curl->get(['url'=>$url]);
 			if($httpData){
 				echo $url."<br/>";
-				$this->file->setData(['filePath'=>$this->filePath,'fileName'=>$key.'.json','data'=>$httpData]);
+				$this->file->setData(['filePath'=>$this->filePath,'fileName'=>$key.'.json','data'=>$httpData,'flag'=>0]);
 			}else{
 				echo "get {$key} data fail";
 				exit;
@@ -106,11 +157,5 @@ class Index extends MY_Controller {
 		$data = json_decode($json,true);
 		return $data;
 	}
-	/**
-	 * 分集A
-	 * @return [type] [description]
-	 */
-	public function fundaData(){
-		
-	}
+	
 }

@@ -7,7 +7,6 @@
 #涨幅  fundb_increase_rt    -1.94%
 #成交额（万元） fundb_volume    4.48
 #净值  fundb_value    0.9508
-#日期  fundb_nav_dt    2016-04-18
 #溢价率  fundb_discount_rt    -4.19%
 #价格杠杆  fundb_price_leverage_rt    5.449
 #净值杠杆  fundb_net_leverage_rt    5.221
@@ -21,6 +20,7 @@
 #指数涨幅  fundb_index_increase_rt    0.03%
 #母基净值  fundb_base_price    0.9928
 #整体溢价率  fundb_base_est_dis_rt    -0.58%
+#日期  fundb_nav_dt    2016-04-18
 
 
 

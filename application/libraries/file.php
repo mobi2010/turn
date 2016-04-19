@@ -29,10 +29,12 @@ class File {
         $fileName = isset($params['fileName']) ? $params['fileName'] : "0";
         $data = isset($params['data']) ? $params['data'] : "";
         if(!is_dir($filePath)){
-            mkdir($filePath, '0777', TRUE);
+            mkdir($filePath, 0777, true);
+            chmod($filePath, 0777);
         }
-        $flag = file_put_contents( $filePath."/".$fileName , $data ,FILE_APPEND);
-        return $flag;
+        $flag = isset($params['flag']) ? $params['flag'] : FILE_APPEND;
+        $res = file_put_contents( $filePath."/".$fileName , $data ,$flag);
+        return $res;
     }
     /**
      * [获取文件数据]
