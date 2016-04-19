@@ -248,7 +248,7 @@ class Index extends MY_Controller {
 	 */
 	public function getMicrotime($params=[]) {
        list($microtime, $time) = explode(' ', microtime());
-       $time = $params['date'] ? strtotime($params['date']." 00:06:13") : time();
+       $time = $params['date'] ? strtotime($params['date']." 18:15:13") : time();
        $res = $time.substr($microtime,2,3);
        return 1460995573504;
        return $res;
