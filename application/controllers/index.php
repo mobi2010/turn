@@ -250,7 +250,6 @@ class Index extends MY_Controller {
        list($microtime, $time) = explode(' ', microtime());
        $time = $params['date'] ? strtotime($params['date']." 18:15:13") : time();
        $res = $time.substr($microtime,2,3);
-       return 1460995573504;
        return $res;
 	}
 }
