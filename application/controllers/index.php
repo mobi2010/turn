@@ -27,22 +27,50 @@ class Index extends MY_Controller {
 	 */
 	public function index()
 	{	
-		// echo date("Y-m-d H:i:s",'1460995573');
-		//抓数据
-		$this->fetchFunda(['date'=>'2016-04-17']);
-		// $this->fetchFundb();
-		// $this->fetchFundm();
 		
-		//导入
-		// $this->dataFunda(['date'=>'2016-04-19']);
-		//$this->dataFundb(['date'=>'2016-04-19']);
-		//$this->dataFundm(['date'=>'2016-04-19']);
 		
-
+		$data['fundType'] = ['funda'=>'A基','fundb'=>'B基','fundm'=>'母基'];
 		$this->load->view('fund/header',$data);
-		$this->load->view('fund/fetch_data');
+		$this->load->view('fund/fetch_data',$data);
 		$this->load->view('fund/footer');
 	}
+
+	/**
+	 * 抓取
+	 * @return [type] [description]
+	 */
+	public function fetch(){
+		switch ($_GET['type']) {
+			case 'funda':
+				$this->fetchFunda();
+				break;
+			case 'fundb':
+				$this->fetchFundb();
+				break;	
+			case 'fundm':
+				$this->fetchFundm();
+				break;	
+			
+		}
+	} 
+
+	/**
+	 * 导入数据
+	 * @return [type] [description]
+	 */
+	public function data(){
+		switch ($_GET['type']) {
+			case 'funda':
+				$this->dataFunda();
+				break;
+			case 'fundb':
+				$this->dataFundb();
+				break;	
+			case 'fundm':
+				$this->dataFundm();
+				break;	
+		}
+	} 
 	/**
 	 * 母基数据
 	 * 
