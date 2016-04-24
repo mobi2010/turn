@@ -64,7 +64,8 @@ class MY_Controller extends CI_Controller
 		// $this->initData['cityName'] = $cityName = $dataCity[$cityId]['name'];
 		// $this->initData['pineryTitle'] =  $cityName.'分类信息';
 		// $this->initData['pineryDescription'] = "{$cityName}分类信息网，为你提供房产、二手、车辆、服务等海量分类信息，充分满足您免费查看发布信息的需求。";		
-
+		//基础
+		$this->initData = require(APPPATH.'/assets/data/base.php');
 		//A基
 		$this->initData['dataFunda'] = require(APPPATH.'/assets/data/funda.php');
 
@@ -74,16 +75,7 @@ class MY_Controller extends CI_Controller
 		//母基
 		$this->initData['dataFundm'] = require(APPPATH.'/assets/data/fundm.php');
 
-		// //车辆
-		// $this->initData['dataCar'] = require(APPPATH.'/config/data_car.php');
-
-		// //集市
-		// $this->initData['dataMarket'] = require(APPPATH.'/config/data_market.php');
-
-		// //服务
-		// $this->initData['dataServices'] = require(APPPATH.'/config/data_services.php');
-
-		// $this->load->vars('initData',$this->initData);//映射到模板
+		$this->load->vars('initData',$this->initData);//映射到模板
 		return $this->initData;
 	}
 	/**

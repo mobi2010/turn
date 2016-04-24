@@ -37,6 +37,22 @@ class MY_Model extends CI_Model {
         return $this->db->query($sql);
     }
     /**
+     * [fetchRowBySql description]
+     * @return [type] [description]
+     */
+    function fetchRowBySql($param=array()){
+        $this->sqls[] = $sql = $param['sql']; 
+        return $this->db->query($sql)->row_array();
+    }
+    /**
+     * [fetchArrayBySql description]
+     * @return [type] [description]
+     */
+    function fetchArrayBySql($param=array()){
+        $this->sqls[] = $sql = $param['sql']; 
+        return $this->db->query($sql)->result_array();
+    }
+    /**
     * 查询总数...
     * $param["table"] = "table_name";
     * $param["where"] = "id=1";
@@ -44,7 +60,9 @@ class MY_Model extends CI_Model {
     function dataFetchCount($param=array()){     
         $table = $param['table'];   
         $where = $this->dataWhere($param['where']);        
-        $this->sqls[] = $sql = "select count(*) as sum from {$table} $where limit 1";
+        $group = $param['group'] ? " group by ".$param['group'] : null;
+        $having = $param['having'] ? " having ".$param['having'] : null;
+        $this->sqls[] = $sql = "select count(*) as sum from {$table} {$where} limit 1";
         $res = $this->db->query($sql)->row_array();
         return intval($res['sum']);
     }
@@ -61,7 +79,9 @@ class MY_Model extends CI_Model {
         $field = $param['field'] ? $param['field'] : "*" ;
         $where = $this->dataWhere($param['where']);  
         $order = $param['order'] ? " order by ".$param['order'] : null;
-        $this->sqls[] = $sql = "select $field from {$table} {$where} {$order} limit 1"; 
+        $group = $param['group'] ? " group by ".$param['group'] : null;
+        $having = $param['having'] ? " having ".$param['having'] : null;
+        $this->sqls[] = $sql = "select $field from {$table} {$where} {$group} {$having} {$order} limit 1"; 
         return $this->db->query($sql)->row_array();
     }
 
@@ -81,9 +101,11 @@ class MY_Model extends CI_Model {
         $field = $param['field'] ? $param['field'] : "*" ;        
         $where = $this->dataWhere($param['where']);  
         $order = $param['order'] ? " order by ".$param['order'] : null;
+        $group = $param['group'] ? " group by ".$param['group'] : null;
+        $having = $param['having'] ? " having ".$param['having'] : null;
         $limit = $param['limit'] ? " limit ".$param['limit'] : null;          
 
-        $this->sqls[] = $sql = "select $field from {$table} {$where} {$order} {$limit}";
+        $this->sqls[] = $sql = "select $field from {$table} {$where} {$group} {$having} {$order} {$limit}";
         $res = $this->db->query($sql)->result_array();
 
         if(is_array($res) && $param['skey']){
