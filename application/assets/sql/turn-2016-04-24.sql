@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2016-04-24 16:52:22
+-- Generation Time: 2016-04-24 17:31:29
 -- 服务器版本： 5.6.21
 -- PHP Version: 5.6.3
 
@@ -1815,6 +1815,30 @@ INSERT INTO `fundm` (`id`, `base_fund_id`, `base_fund_nm`, `fund_company_nm`, `i
 (554, 502053, '券商分级', '长盛基金', '2015-08-13', '-', '399975', '证券公司', '1.50', '0.25', 502054, '券商A', '+3.5%', '5.50', '5.00', 502055, '券商B', '1.0430', '2016-04-22', '38.26%', '-0.57%', '5:5', 'http://www.csfunds.com.cn/Channel/74027882', '100万以下，1.20%\n100万（含）至200万，0.80%\n200万（含）至500万，0.50%\n500万（含）以上，每笔1000元', '持有1年以下，0.50%\n持有1年至2年，0.25%\n持有2年以上，0', 1461484280),
 (555, 502056, '医疗分级', '广发基金', '2015-07-23', '-', '399989', '中证医疗', '1.50', '0.25', 502057, '医疗A', '+4.0%', '5.50', '5.50', 502058, '医疗B', '1.0979', '2016-04-22', '42.50%', '-0.49%', '5:5', 'http://www.gffunds.com.cn/funds/jjcp/zsxjj/gfylzsfj/jyfl/', '2015-10-26起调整为0', '持有1年以下，0.50%\n持有1年至2年，0.25%\n持有2年以上，0', 1461484280);
 
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `logs`
+--
+
+CREATE TABLE IF NOT EXISTS `logs` (
+`id` bigint(20) NOT NULL,
+  `name` varchar(100) NOT NULL COMMENT '名称',
+  `code` int(11) NOT NULL COMMENT '代码',
+  `buy_price` varchar(100) NOT NULL COMMENT '买入价格',
+  `buy_sum` varchar(100) NOT NULL COMMENT '买入金额',
+  `buy_price_cyb` varchar(100) NOT NULL COMMENT '买入价格（创业板）',
+  `buy_price_sz` varchar(100) NOT NULL COMMENT '买入价格（上证）',
+  `buy_time` int(11) NOT NULL COMMENT '买入时间',
+  `sell_price` varchar(100) NOT NULL COMMENT '卖出价格',
+  `sell_sum` varchar(100) NOT NULL COMMENT '卖出金额',
+  `sell_price_cyb` int(11) NOT NULL COMMENT '卖出价格（创业板）',
+  `sell_price_sz` int(11) NOT NULL COMMENT '卖出价格（上证）',
+  `sell_time` int(11) NOT NULL COMMENT '卖出时间',
+  `P&L` varchar(100) NOT NULL COMMENT '盈亏',
+  `update_time` int(11) NOT NULL COMMENT '更新时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作日志';
+
 --
 -- Indexes for dumped tables
 --
@@ -1838,6 +1862,12 @@ ALTER TABLE `fundm`
  ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `logs`
+--
+ALTER TABLE `logs`
+ ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -1856,6 +1886,11 @@ MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=556;
 --
 ALTER TABLE `fundm`
 MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=556;
+--
+-- AUTO_INCREMENT for table `logs`
+--
+ALTER TABLE `logs`
+MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
