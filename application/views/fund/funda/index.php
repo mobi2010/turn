@@ -4,6 +4,8 @@
 .list tr{clear:both;border-top:#CCCCCC solid thin;}
 .list tr:hover{background:#CC6600}
 .list td{padding: 0.5em}
+
+.list .avgPrice{background:#CC6600}
 </style>
 <?php 
 $fundFields = [
@@ -25,7 +27,9 @@ $fundFields = [
 $th = html_th(["body"=>'ID']);
 
 foreach ($fundFields as $key => $value) {
-    $th .= html_th(["body"=>$value['title']]);
+	$fparams['body'] = $value['title'];
+	$fparams['class'] = $key == 'avgPrice' ? 'avgPrice' : null;
+    $th .= html_th($fparams);
 }
 
 $tr = html_tr(['body'=>$th]);
@@ -35,7 +39,9 @@ foreach ($resData as $key => $value) {
     $td = html_td(["body"=>$key+1]);
     foreach ($fundFields as $fk => $fv) {
     	$body = $fk == 'funda_name' ? html_a(['text'=>$value[$fk],'href'=>mobi_url('funda/dlist',['funda_id'=>$value['funda_id']])]) : $value[$fk];
-        $td .= html_td(["body"=>$body]);
+        $vparams['body'] = $body;
+        $vparams['class'] = $fk == 'avgPrice' ? 'avgPrice' : null;
+        $td .= html_td($vparams);
     }
     $tr .= html_tr(['body'=>$td]);
 }
