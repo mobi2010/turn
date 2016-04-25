@@ -16,20 +16,19 @@ $fundFields = [
 'code'=>['title'=>'代码'],  
 'name'=>['title'=>'名称'],  
 'price'=>['title'=>'价格'],  
+'number'=>['title'=>'数量'],  
 'sum'=>['title'=>'总额'],  
-'price_cyb'=>['title'=>'创业板价格'],  
-'price_sz'=>['title'=>'上证价格'],
-'PL'=>['title'=>'盈亏'],
+'price_top'=>['title'=>'最高价'],  
+'price_bottom'=>['title'=>'最低价'],
 'status'=>['title'=>'买|卖'],
 'operate_time'=>['title'=>'操作时间'],
-'insert_time'=>['title'=>'时间']
+//'insert_time'=>['title'=>'时间']
 ];
 
 $th = html_th(["body"=>'ID']);
 
 foreach ($fundFields as $key => $value) {
 	$fparams['body'] = $value['title'];
-	$fparams['class'] = $key == 'PL' ? 'avgPrice' : null;
     $th .= html_th($fparams);
 }
 $th .= html_th(['body'=>'操作']);
@@ -49,7 +48,6 @@ foreach ($resData as $key => $value) {
             $body = $value[$fk];
         }
         $vparams['body'] = $body;
-        $vparams['class'] = $fk == 'PL' ? 'avgPrice' : null;
         $td .= html_td($vparams);
     }
     $body = html_a(['text'=>'编辑','href'=>mobi_url('member/add',['id'=>$value['id']])]);
@@ -61,6 +59,13 @@ foreach ($resData as $key => $value) {
 }
 $table = html_table(['body'=>$tr,'border'=>"1","class"=>'list']);
 echo $table;
+
+$body = "买入总额：".$plData['buyPrice'].'<br/>';
+$body .= "卖出总额：".$plData['sellPrice'].'<br/>';
+$body .= "盈利：".$plData['profit'].'<br/>';
+$body .= "盈亏：".$plData['PL'].'%<br/>';
+
+echo html_div(['body'=>$body]);
 ?>
 <script type="text/javascript">
     $(document).ready(function() { 
