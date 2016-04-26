@@ -27,8 +27,6 @@ class Fetch extends MY_Controller {
 	 */
 	public function index()
 	{	
-		
-		
 		$data['fundType'] = $this->initData['fundType'];
 		$this->load->view('fund/header',$data);
 		$this->load->view('fund/public/menu',$data);
@@ -52,6 +50,9 @@ class Fetch extends MY_Controller {
 			case 'fundm':
 				$this->fetchFundm($params);
 				break;	
+			case 'qdii':
+				$this->fetchQdii($params);
+				break;	
 			
 		}
 	} 
@@ -72,8 +73,42 @@ class Fetch extends MY_Controller {
 			case 'fundm':
 				$this->dataFundm($params);
 				break;	
+			case 'qdii':
+				$this->dataQdii($params);
+				break;		
 		}
 	} 
+
+	/**
+	 * 导入数据
+	 * @return [type] [description]
+	 */
+	public function dataQdii($params=[]){
+		$jsonPath = $this->getJsonPath($params);
+		$data = $this->getData($jsonPath.'qdii.json');
+		$dataFunda = $this->initData['dataQdii'];
+		if(!empty($data)){
+			foreach ($data['rows'] as $key => $value) {
+				$cell = $value['cell'];
+				$fields = [];
+				foreach ($dataFunda['fields'] as $key => $value) {
+					$fields[$key] = mobi_string_filter($cell[$key]);
+				}
+				$fields['update_time'] = time();
+				$where = "fund_id='{$fields['fund_id']}' and last_est_datetime='{$fields['last_est_datetime']}'";
+				$row = $this->turnModel->dataFetchRow(['table'=>'qdii','where'=>$where]);
+				if(empty($row)){
+					$id = $this->turnModel->dataInsert(['table'=>'qdii','data'=>$fields]);
+					echo "new id {$id} <br/>";
+				}else{
+					$this->turnModel->dataUpdate(['table'=>'qdii','data'=>$fields,'where'=>$row['id']]);
+					echo "update id {$row['id']} <br/>";
+				}
+			}
+		}
+		echo "done";
+	}
+
 	/**
 	 * 母基数据
 	 * 
@@ -91,7 +126,7 @@ class Fetch extends MY_Controller {
 					$fields[$key] = mobi_string_filter($cell[$key]);
 				}
 				$fields['update_time'] = time();
-				$where = "base_fund_id={$fields['base_fund_id']} and last_chg_dt='{$fields['last_chg_dt']}'";
+				$where = "base_fund_id='{$fields['base_fund_id']}' and last_chg_dt='{$fields['last_chg_dt']}'";
 				$row = $this->turnModel->dataFetchRow(['table'=>'fundm','where'=>$where]);
 				if(empty($row)){
 					$id = $this->turnModel->dataInsert(['table'=>'fundm','data'=>$fields]);
@@ -122,7 +157,7 @@ class Fetch extends MY_Controller {
 					$fields[$key] = mobi_string_filter($cell[$key]);
 				}
 				$fields['update_time'] = time();
-				$where = "fundb_id={$fields['fundb_id']} and fundb_nav_dt='{$fields['fundb_nav_dt']}'";
+				$where = "fundb_id='{$fields['fundb_id']}' and fundb_nav_dt='{$fields['fundb_nav_dt']}'";
 				$row = $this->turnModel->dataFetchRow(['table'=>'fundb','where'=>$where]);
 				if(empty($row)){
 					$id = $this->turnModel->dataInsert(['table'=>'fundb','data'=>$fields]);
@@ -153,7 +188,7 @@ class Fetch extends MY_Controller {
 					$fields[$key] = mobi_string_filter($cell[$key]);
 				}
 				$fields['update_time'] = time();
-				$where = "funda_id={$fields['funda_id']} and funda_nav_dt='{$fields['funda_nav_dt']}'";
+				$where = "funda_id='{$fields['funda_id']}' and funda_nav_dt='{$fields['funda_nav_dt']}'";
 				$row = $this->turnModel->dataFetchRow(['table'=>'funda','where'=>$where]);
 				if(empty($row)){
 					$id = $this->turnModel->dataInsert(['table'=>'funda','data'=>$fields]);
@@ -229,7 +264,25 @@ class Fetch extends MY_Controller {
 			exit;
 		}
 	}
-	
+	/**
+	 * 抓取qdii
+	 * @return [type] [description]
+	 */
+	public function fetchQdii($params=[]){
+		$key = "qdii";
+		$dataFunda = $this->initData['dataQdii'];
+		$url = $dataFunda['fetchUrl'].$this->getMicrotime($params);
+		$httpData = $this->curl->get(['url'=>$url]);
+		$jsonPath = $this->getJsonPath($params);
+		if($httpData){
+			echo $url."<br/>";
+			$this->file->setData(['filePath'=>$jsonPath,'fileName'=>$key.'.json','data'=>$httpData,'flag'=>0]);
+		}else{
+			echo "get {$key} data fail";
+			exit;
+		}
+	}
+
 	/**
 	 * 抓取A基
 	 * @return [type] [description]

@@ -75,6 +75,10 @@ class MY_Controller extends CI_Controller
 		//母基
 		$this->initData['dataFundm'] = require(APPPATH.'/assets/data/fundm.php');
 
+		//qdii
+		$this->initData['dataQdii'] = require(APPPATH.'/assets/data/qdii.php');
+
+
 		$this->load->vars('initData',$this->initData);//映射到模板
 		return $this->initData;
 	}
