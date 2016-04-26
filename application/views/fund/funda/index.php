@@ -11,6 +11,7 @@
 $fundFields = [
 'funda_id'=>['title'=>'代码'],  
 'funda_name'=>['title'=>'名称'],  
+'funda_volume'=>['title'=>'成交额(万元)'],
 'coupon_descr_s'=>['title'=>'利率规则'],  
 'funda_value'=>['title'=>'净值'],  
 'abrate'=>['title'=>'A:B'],  

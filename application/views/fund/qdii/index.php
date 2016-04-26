@@ -9,13 +9,15 @@
 </style>
 <?php 
 $fundFields = [
-'funda_id'=>['title'=>'代码'],  
-'funda_name'=>['title'=>'名称'],  
-'coupon_descr_s'=>['title'=>'利率规则'],  
-'funda_value'=>['title'=>'净值'],  
-'abrate'=>['title'=>'A:B'],  
-'funda_left_year'=>['title'=>'剩余年限'],
-'funda_current_price'=>['title'=>'当前价'],
+'fund_id'=>['title'=>'代码'],
+'fund_nm'=>['title'=>'名称'],
+'price'=>['title'=>'现价'],
+'volume'=>['title'=>'成交(万元)'],
+'amount_incr'=>['title'=>'场内新增(万份)'],
+'fund_nav'=>['title'=>'净值'],
+'nav_dt'=>['title'=>'净值日期'],
+'ref_increase_rt'=>['title'=>'指数涨幅'],
+'discount_rt'=>['title'=>'溢价率'],
 'maxPrice'=>['title'=>'最大价'],
 'minPrice'=>['title'=>'最小价'],
 'avgPrice'=>['title'=>'平均价'],
@@ -38,7 +40,7 @@ $tr = html_tr(['body'=>$th]);
 foreach ($resData as $key => $value) {
     $td = html_td(["body"=>$key+1]);
     foreach ($fundFields as $fk => $fv) {
-    	$body = $fk == 'funda_name' ? html_a(['text'=>$value[$fk],'href'=>mobi_url('funda/dlist',['funda_id'=>$value['funda_id']])]) : $value[$fk];
+    	$body = $fk == 'fund_nm' ? html_a(['text'=>$value[$fk],'href'=>mobi_url('qdii/dlist',['fund_id'=>$value['fund_id']])]) : $value[$fk];
         $vparams['body'] = $body;
         $vparams['class'] = $fk == 'avgPrice' ? 'avgPrice' : null;
         $td .= html_td($vparams);

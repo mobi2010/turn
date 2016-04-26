@@ -87,16 +87,20 @@ class Qdii extends MY_Controller {
 			if($key == 0){//当前价
 				$currentData = $value;
 			}
-			if($value['qdii_current_price'] > $maxPrice){//最大价
-				$maxPrice = $value['qdii_current_price'];
+			if($value['price'] > $maxPrice){//最大价
+				$maxPrice = $value['price'];
 			}
-			if($value['qdii_current_price'] < $minPrice){//最小价
-				$minPrice = $value['qdii_current_price'];
+			if($value['price'] < $minPrice){//最小价
+				$minPrice = $value['price'];
+			}
+			//成交额
+			if($value['volume'] > 300 && $weight == 0){
+				$weight++;
 			}
 			$days++;
 		}
 		$res = $currentData;
-		$currentPrice = $currentData['qdii_current_price'];
+		$currentPrice = $currentData['price'];
 		$res['maxPrice'] = $maxPrice;
 		$res['minPrice'] = $minPrice;
 		$res['avgPrice'] = $avgPrice = round(($maxPrice+$minPrice)/2,3);
@@ -105,12 +109,8 @@ class Qdii extends MY_Controller {
 		//=====================权重======================
 		
 		//价差
-		$weight = $res['diffPrice'];
+		$weight += $res['diffPrice'];
 
-		//剩余年限
-		if($res['qdii_left_year'] == '永续'){
-			$weight++;
-		}
 		
 
 		$res['weight'] = $weight;

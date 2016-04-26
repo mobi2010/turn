@@ -18,7 +18,6 @@ foreach ($resData as $key => $value) {
     foreach ($fundFields as $fk => $fv) {
         $td .= html_td(["body"=>$value[$fk]]);
     }
-    $td .= html_th(["body"=>$value['title']]);
     $tr .= html_tr(['body'=>$td]);
 }
 echo $pageView;

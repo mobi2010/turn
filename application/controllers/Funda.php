@@ -94,6 +94,11 @@ class Funda extends MY_Controller {
 				$minPrice = $value['funda_current_price'];
 			}
 			$days++;
+			//成交额
+			if($value['funda_volume'] > 300 && $weight == 0){
+				$weight++;
+			}
+
 		}
 		$res = $currentData;
 		$currentPrice = $currentData['funda_current_price'];
@@ -105,14 +110,21 @@ class Funda extends MY_Controller {
 		//=====================权重======================
 		
 		//价差
-		$weight = $res['diffPrice'];
+		$weight += $res['diffPrice'];
 
 		//剩余年限
 		if($res['funda_left_year'] == '永续'){
 			$weight++;
 		}
 		
-
+		//A:B
+		if($res['abrate'] == '5:5'){
+			$weight++;
+		}
+		//利率规则
+		if(floatval($res['coupon_descr_s']) < 4){
+			$weight++;
+		}
 		$res['weight'] = $weight;
 		$res['days'] = $days;
 		return $res;
