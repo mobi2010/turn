@@ -208,7 +208,36 @@ class Fetch extends MY_Controller {
 		echo "done";
 	}
 
-
+	/**
+	 * 分级A数据
+	 * 
+	 * @return [type] [description]
+	 */
+	public function dataArbitrage($params=[]){
+		$jsonPath = $this->getJsonPath($params);
+		$data = $this->getData($jsonPath.'arbitrage.json');
+		$dataFunda = $this->initData['dataArbitrage'];
+		if(!empty($data)){
+			foreach ($data['rows'] as $key => $value) {
+				$cell = $value['cell'];
+				$fields = [];
+				foreach ($dataFunda['fields'] as $key => $value) {
+					$fields[$key] = mobi_string_filter($cell[$key]);
+				}
+				$fields['update_time'] = time();
+				$where = "base_fund_id='{$fields['base_fund_id']}' and est_time='{$fields['est_time']}'";
+				$row = $this->turnModel->dataFetchRow(['table'=>'arbitrage','where'=>$where]);
+				if(empty($row)){
+					$id = $this->turnModel->dataInsert(['table'=>'arbitrage','data'=>$fields]);
+					echo "new id {$id} <br/>";
+				}else{
+					$this->turnModel->dataUpdate(['table'=>'arbitrage','data'=>$fields,'where'=>$row['id']]);
+					echo "update id {$row['id']} <br/>";
+				}
+			}
+		}
+		echo "done";
+	}
 	/**
 	 * 抓取列表数据
 	 * @return [type] [description]
@@ -241,8 +270,9 @@ class Fetch extends MY_Controller {
 	public function fetchArbitrage($params=[]){
 		$key = "arbitrage";
 		$dataFunda = $this->initData['dataArbitrage'];
-		echo $url = $dataFunda['fetchUrl'].$this->getMicrotime($params);
-		$httpData = $this->curl->get(['url'=>$url]);
+		$url = $dataFunda['fetchUrl'].$this->getMicrotime($params);
+		$option = [CURLOPT_COOKIE=>'kbz_newcookie=1; kbzw__Session=vraig2i2ibi211t24vn4cuenu0; kbzw_r_uname=zsc; kbzw__user_login=7Obd08_P1ebax9aX8dXZgrKk49nU49jj69nH1pfalNqZ3NisqJnWxaiwqMupoKiTqZWt2abZkaaZ2d6loZqnpNffxdXUnqmUopKmsZakpsG4wNOMxObt4c3cwqOuo5mZlM7L5MXm7uaYr8SBpamjmbSMzrHNl6ugk7nR4M3Z0NrLxNXrkauUrqWmroGYrLzNwrWljOPL4caXvtjbzN-KlLzd2-jZ3JGql6WnoaqVqZGisaWJzM3dw-jKpqymr4-jlw..; Hm_lvt_164fe01b1433a19b507595a43bf58262=1461506843,1461676686,1461767134,1461770271; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1461771257'];
+		$httpData = $this->curl->get(['url'=>$url,'option'=>$option]);
 		$jsonPath = $this->getJsonPath($params);
 		if($httpData){
 			echo $url."<br/>";
