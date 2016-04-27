@@ -78,6 +78,8 @@ class MY_Controller extends CI_Controller
 		//qdii
 		$this->initData['dataQdii'] = require(APPPATH.'/assets/data/qdii.php');
 
+		//套利
+		$this->initData['dataArbitrage'] = require(APPPATH.'/assets/data/arbitrage.php');
 
 		$this->load->vars('initData',$this->initData);//映射到模板
 		return $this->initData;

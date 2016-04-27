@@ -52,7 +52,10 @@ class Fetch extends MY_Controller {
 				break;	
 			case 'qdii':
 				$this->fetchQdii($params);
-				break;	
+				break;
+			case 'arbitrage':
+				$this->fetchArbitrage($params);
+				break;			
 			
 		}
 	} 
@@ -76,6 +79,9 @@ class Fetch extends MY_Controller {
 			case 'qdii':
 				$this->dataQdii($params);
 				break;		
+			case 'arbitrage':
+				$this->dataArbitrage($params);
+				break;	
 		}
 	} 
 
@@ -224,6 +230,26 @@ class Fetch extends MY_Controller {
 			if($key % 3 == 0){
 				sleep(1);
 			}
+		}
+	}
+
+
+	/**
+	 * 抓取母基
+	 * @return [type] [description]
+	 */
+	public function fetchArbitrage($params=[]){
+		$key = "arbitrage";
+		$dataFunda = $this->initData['dataArbitrage'];
+		echo $url = $dataFunda['fetchUrl'].$this->getMicrotime($params);
+		$httpData = $this->curl->get(['url'=>$url]);
+		$jsonPath = $this->getJsonPath($params);
+		if($httpData){
+			echo $url."<br/>";
+			$this->file->setData(['filePath'=>$jsonPath,'fileName'=>$key.'.json','data'=>$httpData,'flag'=>0]);
+		}else{
+			echo "get {$key} data fail";
+			exit;
 		}
 	}
 

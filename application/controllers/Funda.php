@@ -37,14 +37,19 @@ class Funda extends MY_Controller {
 			$resDataDistinct[$value['funda_id']][] = $value;
 		}
 
+		//1、隐含收益率要高，别看折溢价率；2、交易金额大，流动性好；3、母基金从整体溢价变为整体折价且折价较大较大的时刻买入最好。
+
 		//价格
 		foreach ($resDataDistinct as $key => $value) {
 			$dataWeight = $this->dataWeight($value); 
 			$sortData[] = $dataWeight['weight'];
+			// $sortData0[] = $dataWeight['funda_profit_rt_next'];
+			// $sortData1[] = $dataWeight['funda_volume'];
+			// $sortData2[] = $dataWeight['funda_base_est_dis_rt'];
 			$resDataPrice[] = $dataWeight;
 		}
-		array_multisort($sortData, SORT_DESC,$resDataPrice);
-
+		//array_multisort($sortData0,SORT_DESC,$sortData1, SORT_DESC,$sortData2,SORT_ASC,$resDataPrice);
+		array_multisort($sortData,SORT_DESC,$resDataPrice);
 
 		$data['fundFields'] = $this->initData['dataFunda']['fields'];
 		$data['resData'] = $resDataPrice;
@@ -95,7 +100,7 @@ class Funda extends MY_Controller {
 			}
 			$days++;
 			//成交额
-			if($value['funda_volume'] > 300 && $weight == 0){
+			if($value['funda_volume'] > 200 && $weight == 0){
 				$weight++;
 			}
 
@@ -109,23 +114,38 @@ class Funda extends MY_Controller {
 		$res['diffPrice'] = round($avgPrice - $currentPrice,3);
 		//=====================权重======================
 		
-		//价差
-		$weight += $res['diffPrice'];
+		//$weight
+        
 
-		//剩余年限
-		if($res['funda_left_year'] == '永续'){
+		
+
+		// //剩余年限
+		// if($res['funda_left_year'] == '永续'){
+		// 	$weight++;
+		// }
+		//利率规则
+		// if(floatval($res['coupon_descr_s']) <3.5 && floatval($res['coupon_descr_s'])>0){
+		// 	$weight++;
+		// }
+
+		//修正收益率
+		$weight +=floatval($res['funda_profit_rt_next']) - 4;
+		
+
+		//剔除无下折收益
+		// if(floatval($res['lower_recalc_profit_rt']) > 1){
+		// 	$weight++;
+		// }
+
+		//剔除折价率小于5的
+		if(floatval($res['funda_discount_rt']) - 4>0){
 			$weight++;
 		}
 		
-		//A:B
-		if($res['abrate'] == '5:5'){
-			$weight++;
-		}
-		//利率规则
-		if(floatval($res['coupon_descr_s']) < 4){
-			$weight++;
-		}
-		$res['weight'] = $weight;
+		//价差
+		$weight += $res['diffPrice'];
+
+		$res['weight'] = round($weight,3);
 		$res['days'] = $days;
 		return $res;
 	}

@@ -88,7 +88,7 @@ class Fundb extends MY_Controller {
 			
 			$days++;
 			//成交额
-			if($value['fundb_volume'] > 50 && $weight == 0){
+			if($value['fundb_volume'] > 100 && $weight == 0){
 				$weight++;
 			}
 
@@ -105,16 +105,16 @@ class Fundb extends MY_Controller {
 			$weight += abs($res['fundb_base_est_dis_rt']);
 		}
 		
-		//利率规则
-		if(floatval($res['coupon_descr_s']) < 4){
-			$weight++;
-		}
+		// //利率规则
+		// if(floatval($res['coupon_descr_s']) < 4){
+		// 	$weight++;
+		// }
 
-		//下折
-		$fundb_lower_recalc_rt = floatval($res['fundb_lower_recalc_rt']);
-		if($fundb_lower_recalc_rt < 15 && $fundb_lower_recalc_rt > 5){
-			$weight++;
-		}
+		// //下折
+		// $fundb_lower_recalc_rt = floatval($res['fundb_lower_recalc_rt']);
+		// if($fundb_lower_recalc_rt < 15 && $fundb_lower_recalc_rt > 5){
+		// 	$weight++;
+		// }
 
 
 		$res['weight'] = $weight;
