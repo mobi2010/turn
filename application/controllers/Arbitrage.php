@@ -29,10 +29,32 @@ class Arbitrage extends MY_Controller {
 		// $size = 15;
 		// $start = ($page-1)*$size;
 
-		$resData = $this->turnModel->dataFetchArray(['table'=>'arbitrage','order'=>'id asc']);
+		$resData = $this->turnModel->dataFetchArray(['table'=>'arbitrage','order'=>'est_time desc']);
+
+
+
+		//排重
+		foreach ($resData as $key => $value) {
+			$resDataDistinct[$value['base_fund_id']][] = $value;
+		}
+
+		//1、隐含收益率要高，别看折溢价率；2、交易金额大，流动性好；3、母基金从整体溢价变为整体折价且折价较大较大的时刻买入最好。
+
+		//价格
+		foreach ($resDataDistinct as $key => $value) {
+			$dataWeight = $this->dataWeight($value); 
+			$sortData[] = floatval($dataWeight['est_dis_rt']);
+			// $sortData0[] = $dataWeight['funda_profit_rt_next'];
+			// $sortData1[] = $dataWeight['funda_volume'];
+			// $sortData2[] = $dataWeight['funda_base_est_dis_rt'];
+			$resDataPrice[] = $dataWeight;
+		}
+		//array_multisort($sortData0,SORT_DESC,$sortData1, SORT_DESC,$sortData2,SORT_ASC,$resDataPrice);
+		array_multisort($sortData,SORT_ASC,$resDataPrice);
+
 
 		$data['fundFields'] = $this->initData['dataArbitrage']['fields'];
-		$data['resData'] = $resData;
+		$data['resData'] = $resDataPrice;
 		// $data['pageView'] = $this->load->view('fund/public/page',array('total'=>$res['sum'],'pageSize'=>$size),true);
 		$this->load->view('fund/header',$data);
 		$this->load->view('fund/public/menu',$data);
@@ -55,6 +77,56 @@ class Arbitrage extends MY_Controller {
 		$this->load->view('fund/arbitrage/list',$data);
 		$this->load->view('fund/footer');
 	}
+	/**
+	 * 分析最优的数据
+	 * @return [type] [description]
+	 */
+	function dataWeight($data){
+		$days = 0;//天数
+		$weight = 0; //权重
+		$maxPrice = 0;//最大价
+		$minPrice = 10000;//最小价 
+		$currentPrice = 0;//当前价
+		$avgPrice = 0;//均价
+		foreach ($data as $key => $value) {
+			if($key == 0){//当前价
+				$currentData = $value;
+			}
+			
+			$days++;
+			// //成交额
+			// if($value['fundb_volume'] > 100 && $weight == 0){
+			// 	$weight++;
+			// }
 
+		}
+		$res = $currentData;
+		
+		//=====================权重======================
+		
+		
+
+
+		//整体溢价率
+		if(floatval($res['fundb_base_est_dis_rt'])<0){
+			$weight += abs($res['fundb_base_est_dis_rt']);
+		}
+		
+		// //利率规则
+		// if(floatval($res['coupon_descr_s']) < 4){
+		// 	$weight++;
+		// }
+
+		// //下折
+		// $fundb_lower_recalc_rt = floatval($res['fundb_lower_recalc_rt']);
+		// if($fundb_lower_recalc_rt < 15 && $fundb_lower_recalc_rt > 5){
+		// 	$weight++;
+		// }
+
+
+		$res['weight'] = $weight;
+		$res['days'] = $days;
+		return $res;
+	}
 	
 }
