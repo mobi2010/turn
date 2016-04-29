@@ -31,7 +31,7 @@ class Member extends MY_Controller {
 		$data['statusType'] = $this->statusType;
 
 		$page = intval($_GET['p']) > 0 ? intval($_GET['p']) : 1;
-		$size = 15;
+		$size = 15000;
 		$start = ($page-1)*$size;
 		$where = $_GET["code"] ? "code=".$_GET["code"] : null;
 		$sum = $this->turnModel->dataFetchCount(['table'=>'operate_logs','where'=>$where]);
