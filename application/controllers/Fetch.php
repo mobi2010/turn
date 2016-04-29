@@ -27,7 +27,7 @@ class Fetch extends MY_Controller {
 	 */
 	public function index()
 	{	
-		$data['fundType'] = $this->initData['fundType'];
+		$data['fundType'] = ['all'=>'所有']+$this->initData['fundType'];
 		$this->load->view('fund/header',$data);
 		$this->load->view('fund/public/menu',$data);
 		$this->load->view('fund/fetch/index',$data);
@@ -40,7 +40,17 @@ class Fetch extends MY_Controller {
 	 */
 	public function fetch(){
 		$params['date'] = $_POST['date'];
-		switch ($_POST['type']) {
+		$type = $_POST['type'];
+		if($type == 'all'){
+			$this->fetchFunda($params);
+			$this->fetchFundb($params);
+			$this->fetchFundm($params);
+			$this->fetchQdii($params);
+			$this->fetchArbitrage($params);
+			return ;
+		}
+
+		switch ($type) {
 			case 'funda':
 				$this->fetchFunda($params);
 				break;
@@ -66,6 +76,15 @@ class Fetch extends MY_Controller {
 	 */
 	public function data(){
 		$params['date'] = $_POST['date'];
+		$type = $_POST['type'];
+		if($type == 'all'){
+			$this->dataFunda($params);
+			$this->dataFundb($params);
+			$this->dataFundm($params);
+			$this->dataQdii($params);
+			$this->dataArbitrage($params);
+			return ;
+		}
 		switch ($_POST['type']) {
 			case 'funda':
 				$this->dataFunda($params);
@@ -112,7 +131,7 @@ class Fetch extends MY_Controller {
 				}
 			}
 		}
-		echo "done";
+		echo "done<br/><br/>";
 	}
 
 	/**
@@ -143,7 +162,7 @@ class Fetch extends MY_Controller {
 				}
 			}
 		}
-		echo "done";
+		echo "done<br/><br/>";
 	}
 
 	/**
@@ -174,7 +193,7 @@ class Fetch extends MY_Controller {
 				}
 			}
 		}
-		echo "done";
+		echo "done<br/><br/>";
 	}
 
 	/**
@@ -205,7 +224,7 @@ class Fetch extends MY_Controller {
 				}
 			}
 		}
-		echo "done";
+		echo "done<br/><br/>";
 	}
 
 	/**
@@ -236,7 +255,7 @@ class Fetch extends MY_Controller {
 				}
 			}
 		}
-		echo "done";
+		echo "done<br/><br/>";
 	}
 	/**
 	 * 抓取列表数据
@@ -271,7 +290,7 @@ class Fetch extends MY_Controller {
 		$key = "arbitrage";
 		$dataFunda = $this->initData['dataArbitrage'];
 		$url = $dataFunda['fetchUrl'].$this->getMicrotime($params);
-		$option = [CURLOPT_COOKIE=>'kbz_newcookie=1; kbzw__Session=vraig2i2ibi211t24vn4cuenu0; kbzw_r_uname=zsc; kbzw__user_login=7Obd08_P1ebax9aX8dXZgrKk49nU49jj69nH1pfalNqZ3NisqJnWxaiwqMupoKiTqZWt2abZkaaZ2d6loZqnpNffxdXUnqmUopKmsZakpsG4wNOMxObt4c3cwqOuo5mZlM7L5MXm7uaYr8SBpamjmbSMzrHNl6ugk7nR4M3Z0NrLxNXrkauUrqWmroGYrLzNwrWljOPL4caXvtjbzN-KlLzd2-jZ3JGql6WnoaqVqZGisaWJzM3dw-jKpqymr4-jlw..; Hm_lvt_164fe01b1433a19b507595a43bf58262=1461506843,1461676686,1461767134,1461770271; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1461771257'];
+		$option = [CURLOPT_COOKIE=>'kbz__user_login=1ubd08_P1ebax9aX8dXZgq6l0dHU5_Dk293K1I3Zk9ewxtGapLHbza2jqsSmlaSplKSX1qzWma-k3MemmZSzjuXK2NfSlKqfqZOomZSzjsWi0tagtujm4M7iwqKtj6CBnMbWzOLa69Hpya6Yqt7V2eWVttrPl7HJgcuYkqDApanUnKKMuNLmzdjPxtKs3e2knqyjpZWsgZvDqcSuwKWV1eLX3IK9xtbj0JmBt-Hn2ObRppasj6Omk6SapKesmpm_2MjX09ynlqOYoqyr; kbzw_r_uname=zsc; kbzw__user_login=7Obd08_P1ebax9aX8dXZgrKk49nU49jj69nH1pfalNqZ3NisqJnWxaiwqMupoKiTqZWt2abZkaaZ2d6loZqnpNffxdXUnqmUopKmsZakpsG4wNOMxObt4c3cwqOuo5mZlMTD2crl6-LryauBvefpzuWMxMPZgcbKk9CBoZHTqqXIrJWXo-bR49zK3cO7yuioqpywmqqYlonCv8fFrZyB4OLgzpmz3MXh0KCXtuDT387ZqKqZp5yllKyXqKWrroHDwtra59KooaqZpJSt; kbzw__Session=icjmk2v752sr8qgk3936nlg1g7; kbz_newcookie=1; Hm_lvt_164fe01b1433a19b507595a43bf58262=1459843452,1459844626,1461579122,1461727656; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1461900718'];
 		$httpData = $this->curl->get(['url'=>$url,'option'=>$option]);
 		$jsonPath = $this->getJsonPath($params);
 		if($httpData){
