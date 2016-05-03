@@ -34,9 +34,15 @@ $fundFields = [
 
 $th = html_th(["body"=>'ID']);
 
+$lightFields = ['fundb_current_price','fundb_increase_rt','fundb_volume','fundb_base_est_dis_rt','b_est_val','fundb_discount_rt'];
+
 foreach ($fundFields as $key => $value) {
 	$fparams['body'] = $value['title'];
-	$fparams['class'] = $key == 'avgPrice' ? 'avgPrice' : null;
+    if(in_array($key,$lightFields)){
+        $fparams['class'] = 'avgPrice';
+    }else{
+        $fparams['class'] = null;
+    }
     $th .= html_th($fparams);
 }
 
@@ -48,7 +54,13 @@ foreach ($resData as $key => $value) {
     foreach ($fundFields as $fk => $fv) {
     	$body = $fk == 'fundb_name' ? html_a(['text'=>$value[$fk],'href'=>mobi_url('fundb/dlist',['fundb_id'=>$value['fundb_id']])]) : $value[$fk];
         $vparams['body'] = $body;
-        $vparams['class'] = $fk == 'avgPrice' ? 'avgPrice' : null;
+
+
+        if(in_array($fk,$lightFields)){
+            $vparams['class'] = 'avgPrice';
+        }else{
+            $vparams['class'] = null;
+        }
         $td .= html_td($vparams);
     }
     $tr .= html_tr(['body'=>$td]);

@@ -143,7 +143,7 @@ class Funda extends MY_Controller {
 		}
 		
 		//价差
-		$weight += $res['diffPrice'];
+		$weight = $res['diffPrice'];
 
 		$res['weight'] = round($weight,3);
 		$res['days'] = $days;

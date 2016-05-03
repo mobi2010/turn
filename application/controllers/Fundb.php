@@ -87,10 +87,7 @@ class Fundb extends MY_Controller {
 			}
 			
 			$days++;
-			//成交额
-			if($value['fundb_volume'] > 100 && $weight == 0){
-				$weight++;
-			}
+			
 
 		}
 		$res = $currentData;
@@ -98,23 +95,36 @@ class Fundb extends MY_Controller {
 		//=====================权重======================
 		
 		
-
+		//成交额
+		if($res['fundb_volume'] > 100){
+			$weight++;
+		}
 
 		//整体溢价率
 		if(floatval($res['fundb_base_est_dis_rt'])<0){
 			$weight += abs($res['fundb_base_est_dis_rt']);
 		}
 		
-		// //利率规则
-		// if(floatval($res['coupon_descr_s']) < 4){
-		// 	$weight++;
-		// }
+		//溢价率
+		if(floatval($res['fundb_discount_rt'])<0){
+			$weight += abs($res['fundb_discount_rt'])/10;
+		}
 
-		// //下折
-		// $fundb_lower_recalc_rt = floatval($res['fundb_lower_recalc_rt']);
-		// if($fundb_lower_recalc_rt < 15 && $fundb_lower_recalc_rt > 5){
-		// 	$weight++;
-		// }
+		//剩余年限
+		if($res['fundb_left_year'] != '永续'){
+			$weight--; 
+		}
+		
+		//利率规则
+		if(floatval($res['coupon_descr_s']) >= 4.5){
+			$weight--;
+		}
+
+		//下折
+		$fundb_lower_recalc_rt = floatval($res['fundb_lower_recalc_rt']);
+		if($fundb_lower_recalc_rt > 20){
+			$weight++;
+		}
 
 
 		$res['weight'] = $weight;

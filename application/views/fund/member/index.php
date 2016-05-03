@@ -25,6 +25,14 @@ $fundFields = [
 //'insert_time'=>['title'=>'时间']
 ];
 
+
+$body = "买入总额：".$plData['buyPrice'].'<br/>';
+$body .= "卖出总额：".$plData['sellPrice'].'<br/>';
+$body .= "盈利：".$plData['profit'].'<br/>';
+$body .= "盈亏：".$plData['PL'].'%<br/>';
+
+echo html_div(['body'=>$body]);
+
 $th = html_th(["body"=>'ID']);
 
 foreach ($fundFields as $key => $value) {
@@ -60,12 +68,6 @@ foreach ($resData as $key => $value) {
 $table = html_table(['body'=>$tr,'border'=>"1","class"=>'list']);
 echo $table;
 
-$body = "买入总额：".$plData['buyPrice'].'<br/>';
-$body .= "卖出总额：".$plData['sellPrice'].'<br/>';
-$body .= "盈利：".$plData['profit'].'<br/>';
-$body .= "盈亏：".$plData['PL'].'%<br/>';
-
-echo html_div(['body'=>$body]);
 ?>
 <script type="text/javascript">
     $(document).ready(function() { 
