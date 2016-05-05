@@ -9,7 +9,7 @@
 </style>
 <?php 
 
-$tform = html_select(["name"=>"table",'options'=>$tables]);
+$tform = html_select(["name"=>"table",'options'=>$tables,"selected"=>$table]);
 $tform .= html_submit();
 echo html_form(['body'=>$tform]);
 
@@ -35,6 +35,7 @@ $fundFields = [
 
 $body = "买入总额：".$plData['buyPrice'].'<br/>';
 $body .= "卖出总额：".$plData['sellPrice'].'<br/>';
+$body .= "冻结总额：".$plData['frozenPrice'].'<br/>';
 $body .= "盈利：".$plData['profit'].'<br/>';
 $body .= "盈亏：".$plData['PL'].'%<br/>';
 

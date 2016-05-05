@@ -133,3 +133,18 @@ if ( ! function_exists('mobi_array_rand'))
 		}
 	}
 }
+
+if ( ! function_exists('mobi_array_kv'))
+{
+	function mobi_array_kv($param=array()){
+		$res = $param['data'];
+		if(is_array($res) && $param['skey']){
+            $result = array();
+            foreach ($res as $k=>$v){
+                $result[$v[$param['skey']]] = $param['sval'] ? $v[$param['sval']] : $v;
+            }
+            return $result;
+        }
+        return $res;
+	}
+}

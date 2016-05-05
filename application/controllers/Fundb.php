@@ -29,7 +29,30 @@ class Fundb extends MY_Controller {
 		// $size = 15;
 		// $start = ($page-1)*$size;
 
-		$resData = $this->turnModel->dataFetchArray(['table'=>'fundb','order'=>'fundb_nav_dt desc']);
+		
+
+
+		$data['fundFields'] = $this->initData['dataFundb']['fields'];
+		$data['resData'] = $this->sortData();
+		// $data['pageView'] = $this->load->view('fund/public/page',array('total'=>$res['sum'],'pageSize'=>$size),true);
+		$this->load->view('fund/header',$data);
+		$this->load->view('fund/public/menu',$data);
+		$this->load->view('fund/fundb/index',$data);
+		$this->load->view('fund/footer');
+	}
+	/**
+	 * 数据排序
+	 * @return [type] [description]
+	 */
+	public function sortData($params=[]){
+		$where = $params['where'];
+		$resData = $this->turnModel->dataFetchArray(['table'=>'fundb','where'=>$where,'order'=>'fundb_nav_dt desc']);
+
+		//排重
+		if(empty($resData)){
+			return [];
+		}
+		
 
 		//排重
 		foreach ($resData as $key => $value) {
@@ -43,15 +66,7 @@ class Fundb extends MY_Controller {
 			$resDataPrice[] = $dataWeight;
 		}
 		array_multisort($sortData, SORT_DESC,$resDataPrice);
-
-
-		$data['fundFields'] = $this->initData['dataFundb']['fields'];
-		$data['resData'] = $resDataPrice;
-		// $data['pageView'] = $this->load->view('fund/public/page',array('total'=>$res['sum'],'pageSize'=>$size),true);
-		$this->load->view('fund/header',$data);
-		$this->load->view('fund/public/menu',$data);
-		$this->load->view('fund/fundb/index',$data);
-		$this->load->view('fund/footer');
+		return $resDataPrice;
 	}
 	/**
 	 * 列表
@@ -96,7 +111,7 @@ class Fundb extends MY_Controller {
 		
 		
 		//成交额
-		if($res['fundb_volume'] > 100){
+		if($res['fundb_volume'] > 300){
 			$weight++;
 		}
 
@@ -106,9 +121,9 @@ class Fundb extends MY_Controller {
 		}
 		
 		//溢价率
-		if(floatval($res['fundb_discount_rt'])<0){
-			$weight += abs($res['fundb_discount_rt'])/10;
-		}
+		// if(floatval($res['fundb_discount_rt'])<0){
+		// 	$weight += abs($res['fundb_discount_rt'])/10;
+		// }
 
 		//剩余年限
 		if($res['fundb_left_year'] != '永续'){
@@ -116,7 +131,7 @@ class Fundb extends MY_Controller {
 		}
 		
 		//利率规则
-		if(floatval($res['coupon_descr_s']) >= 4.5){
+		if(floatval($res['coupon_descr_s']) >= 4){
 			$weight--;
 		}
 
@@ -130,5 +145,104 @@ class Fundb extends MY_Controller {
 		$res['weight'] = $weight;
 		$res['days'] = $days;
 		return $res;
+	}
+	/**
+	 * 模拟器
+	 * @return [type] [description]
+	 */
+	public function simulate(){
+		$this->turnModel->query("TRUNCATE fundb_operate_logs;");
+
+
+		$startDate = strtotime("2016-04-17 14:00:00");
+		$endDate = time();
+		//echo date("Y-m-d H:i:s",1460959200);
+		$number = 3;//基金数量
+		$buyNumber = 1000 ;//购买数量 
+		$day = 0;
+		for($i=$startDate; $i<$endDate; $i+=86400){
+
+			//选出T天N只
+			$date = date("Y-m-d",$i);
+			$sortData = $this->sortData(['where'=>"fundb_nav_dt = '{$date}'"]);
+			$sortData = mobi_array_kv(['data'=>$sortData,'skey'=>'fundb_id']);
+			$sortI = 0;
+			$sortRes = [];
+			if(!empty($sortData)){
+				foreach ($sortData as $key => $value) {
+					$sortRes[$value['fundb_id']] = $value;
+					$sortI++;
+					if($sortI == $number){
+						break;
+					}
+				}
+			}
+
+
+			//操作选出的基金
+			if(!empty($sortRes)){
+				foreach ($sortRes as $key => $value) {
+					
+					$where = "code='{$value['fundb_id']}'";
+					$resData = $this->turnModel->dataFetchArray(['table'=>'fundb_operate_logs','where'=>$where]);
+					$sum = count($resData);
+
+					$buyData = [];
+					$buyData['name'] = $value['fundb_name'];
+					$buyData['code'] = $value['fundb_id'];
+					$buyData['price'] = $value['fundb_current_price'];
+					$buyData['number'] = $buyNumber;
+					$buyData['sum'] = $buyData['price']*$buyData['number'];
+					$buyData['operate_time'] = $i;
+					$buyData['insert_time'] = time();
+					$buyData['status'] = 1;
+					$buyData['close'] = 0;
+
+					if($sum %2 == 0){//没有或者都卖了，就买
+						
+						$this->turnModel->dataInsert(['table'=>'fundb_operate_logs','data'=>$buyData]);
+					}else{//已买，就不管
+						
+					}
+				}
+			}
+
+			//把除了今天已买的，未关闭的，卖出
+			$where = "operate_time != {$i} and close = 0"; 
+			$resData = $this->turnModel->dataFetchArray(['table'=>'fundb_operate_logs','where'=>$where]);
+			if(!empty($resData)){
+				foreach ($resData as $key => $value) {
+					
+					//卖出
+					$buyData = [];
+					$sellValue = $sortData[$value['code']];
+					if(!$sellValue){
+						//选出T天N只
+						//$date = date("Y-m-d",($i-86400));
+						$where = "fundb_id='{$value['code']}'";
+						$sellValue = $this->turnModel->dataFetchRow(['table'=>'fundb','where'=>$where,'order'=>'fundb_nav_dt desc']);
+
+					}
+
+					$buyData['name'] = $sellValue['fundb_name'];
+					$buyData['code'] = $sellValue['fundb_id'];
+					$buyData['price'] = $sellValue['fundb_current_price'];
+					$buyData['number'] = $buyNumber;
+					$buyData['sum'] = $buyData['price']*$buyData['number'];
+					$buyData['operate_time'] = $i;
+					$buyData['insert_time'] = time();
+					$buyData['status'] = 2;
+					$buyData['close'] = 1;
+					$this->turnModel->dataInsert(['table'=>'fundb_operate_logs','data'=>$buyData]);
+
+					//关闭当前数据
+					$this->turnModel->dataUpdate(['table'=>'fundb_operate_logs','data'=>['close'=>1],'where'=>$value['id']]);
+
+				}
+			}
+				
+		}
+
+		echo "done";
 	}
 }

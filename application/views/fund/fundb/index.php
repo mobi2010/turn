@@ -32,6 +32,9 @@ $fundFields = [
 'days' =>['title'=>'天数']
 ];
 
+echo html_a(['text'=>'模拟操盘','href'=>mobi_url('fundb/simulate')]);
+
+
 $th = html_th(["body"=>'ID']);
 
 $lightFields = ['fundb_current_price','fundb_increase_rt','fundb_volume','fundb_base_est_dis_rt','b_est_val','fundb_discount_rt'];

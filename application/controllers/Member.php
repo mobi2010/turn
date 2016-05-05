@@ -71,21 +71,26 @@ class Member extends MY_Controller {
 	public function PL($resData){
 		$buyPrice = 0;//买入总价
 		$sellPrice = 0;//卖出总价
+		$frozenPrice = 0;//冻结总价
 		$PL = 0;//盈亏比例
 		$profit = 0;//盈利
 		if(!empty($resData)){
 			foreach ($resData as $key => $value) {
+				if(isset($value['close']) && $value['close'] == 0){
+					$frozenPrice += $value['sum'];
+				}
 				if($value['status'] == 1){
 					$buyPrice += $value['sum'];
 				}else{
 					$sellPrice += $value['sum'];
 				}
 			}
-			$profit = $sellPrice-$buyPrice;
-			$PL = round($profit/$buyPrice,5)*100;
+			$BP = $buyPrice-$frozenPrice;
+			$profit = $sellPrice-$BP;
+			$PL = round($profit/$BP,5)*100;
 		}
 		
-		return ['buyPrice'=>$buyPrice,'sellPrice'=>$sellPrice,'profit'=>$profit,'PL'=>$PL];
+		return ['frozenPrice'=>$frozenPrice,'buyPrice'=>$buyPrice,'sellPrice'=>$sellPrice,'profit'=>$profit,'PL'=>$PL];
 	}
 	/**
 	 * [save description]

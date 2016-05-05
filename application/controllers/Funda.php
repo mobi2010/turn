@@ -3,45 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 
-
-// CREATE TABLE `funda_operate_logs` (
-// `id` bigint(20) NOT NULL,
-//   `name` varchar(100) NOT NULL COMMENT '名称',
-//   `code` varchar(100) NOT NULL COMMENT '代码',
-//   `price` varchar(100) NOT NULL COMMENT '价格',
-//   `number` int(11) NOT NULL COMMENT '数量',
-//   `sum` varchar(100) NOT NULL COMMENT '总金额',
-//   `price_top` varchar(100) NOT NULL COMMENT '最高价',
-//   `price_bottom` varchar(100) NOT NULL COMMENT '最低价',
-//   `insert_time` int(11) NOT NULL COMMENT '操作时间',
-//   `status` tinyint(4) NOT NULL COMMENT '操作（1买，2卖）',
-//   `operate_time` int(11) NOT NULL COMMENT '操作时间',
-//   `close` tinyint(4) NOT NULL COMMENT '0：正常，1：已关'
-// ) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8 COMMENT='操作日志';
-
-// --
-// -- Indexes for dumped tables
-// --
-
-// --
-// -- Indexes for table `funda_operate_logs`
-// --
-// ALTER TABLE `funda_operate_logs`
-//  ADD PRIMARY KEY (`id`);
-
-// --
-// -- AUTO_INCREMENT for dumped tables
-// --
-
-// --
-// -- AUTO_INCREMENT for table `funda_operate_logs`
-// --
-// ALTER TABLE `funda_operate_logs`
-// MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=53;
-
-
-
-
 class Funda extends MY_Controller {
 	public $sourceData;
 	function __construct($params = array())
@@ -66,7 +27,6 @@ class Funda extends MY_Controller {
 	 */
 	public function index()
 	{	
-
 		// $page = intval($_GET['p']) > 0 ? intval($_GET['p']) : 1;
 		// $size = 15;
 		// $start = ($page-1)*$size;
@@ -151,10 +111,7 @@ class Funda extends MY_Controller {
 				$minPrice = $value['funda_current_price'];
 			}
 			$days++;
-			//成交额
-			if($value['funda_volume'] > 200 && $weight == 0){
-				$weight++;
-			}
+			
 
 		}
 		$res = $currentData;
@@ -169,33 +126,37 @@ class Funda extends MY_Controller {
 		//$weight
         
 
-		
+		//成交额
+		if($res['funda_volume'] > 300){
+			$weight++;
+		}
 
 		// //剩余年限
-		// if($res['funda_left_year'] == '永续'){
-		// 	$weight++;
-		// }
+		if($res['funda_left_year'] == '永续'){
+			$weight++;
+		}
 		//利率规则
 		// if(floatval($res['coupon_descr_s']) <3.5 && floatval($res['coupon_descr_s'])>0){
 		// 	$weight++;
 		// }
 
 		//修正收益率
-		$weight +=floatval($res['funda_profit_rt_next']) - 4;
+		//$weight +=floatval($res['funda_profit_rt_next']) - 4;
 		
 
 		//剔除无下折收益
-		// if(floatval($res['lower_recalc_profit_rt']) > 1){
-		// 	$weight++;
-		// }
+		if($res['lower_recalc_profit_rt'] == '-'){
+			$weight -= 10;
+		}
 
 		//剔除折价率小于5的
-		if(floatval($res['funda_discount_rt']) - 4>0){
-			$weight++;
-		}
+		// if(floatval($res['funda_discount_rt']) > 5){
+		// 	$weight += 5;
+		// }
 		
 		//价差
-		$weight = $res['diffPrice'];
+		//if($res['diffPrice'])
+		$weight += $res['diffPrice']*10;
 
 		$res['weight'] = round($weight,3);
 		$res['days'] = $days;
@@ -207,14 +168,21 @@ class Funda extends MY_Controller {
 	 * @return [type] [description]
 	 */
 	public function simulate(){
+		$this->turnModel->query("TRUNCATE funda_operate_logs;");
+
+
 		$startDate = strtotime("2016-04-17 14:00:00");
 		$endDate = time();
 		//echo date("Y-m-d H:i:s",1460959200);
-		$number = 3;
+		$number = 3;//基金数量
+		$buyNumber = 1000 ;//购买数量 
+		$day = 0;
 		for($i=$startDate; $i<$endDate; $i+=86400){
+
 			//选出T天N只
 			$date = date("Y-m-d",$i);
 			$sortData = $this->sortData(['where'=>"funda_nav_dt = '{$date}'"]);
+			$sortData = mobi_array_kv(['data'=>$sortData,'skey'=>'funda_id']);
 			$sortI = 0;
 			$sortRes = [];
 			if(!empty($sortData)){
@@ -227,30 +195,6 @@ class Funda extends MY_Controller {
 				}
 			}
 
-			//查询T-1天操作的N只
-			// $todayTime = ($i-50400);
-			// $where = "operate_time>=".($todayTime-86400)." and operate_time<".$todayTime;
-			// //没卖的
-			// $resData = $this->turnModel->dataFetchArray(['table'=>'funda_operate_logs','where'=>$where." and status = 1",'skey'=>'code']);
-			// //已卖的
-			// $resSellData = $this->turnModel->dataFetchArray(['table'=>'funda_operate_logs','where'=>$where." and status = 2",'skey'=>'code']);
-
-			// if(!empty($resData)){
-			// 	foreach ($resData as $key => $value) {
-			// 		unset($sortRes[$key]);
-			// 		if($resSellData[$key]){//如果已经卖了，不操作
-			// 			continue;
-			// 		}
-			// 		if(!$sortRes[$key]){//如果不在推荐的里边，卖出
-			// 			$sellData = $value;
-			// 			$sellData['operate_time'] = $i;
-			// 			$sellData['status'] = 2;
-			// 			$sellData['insert_time'] = $i;
-			// 			unset($sellData['id']);
-			// 			$this->turnModel->dataInsert(['table'=>'funda_operate_logs','data'=>$sellData]);
-			// 		}
-			// 	}
-			// }
 
 			//操作选出的基金
 			if(!empty($sortRes)){
@@ -264,7 +208,7 @@ class Funda extends MY_Controller {
 					$buyData['name'] = $value['funda_name'];
 					$buyData['code'] = $value['funda_id'];
 					$buyData['price'] = $value['funda_current_price'];
-					$buyData['number'] = 1000;
+					$buyData['number'] = $buyNumber;
 					$buyData['sum'] = $buyData['price']*$buyData['number'];
 					$buyData['operate_time'] = $i;
 					$buyData['insert_time'] = time();
@@ -275,26 +219,47 @@ class Funda extends MY_Controller {
 						
 						$this->turnModel->dataInsert(['table'=>'funda_operate_logs','data'=>$buyData]);
 					}else{//已买，就不管
-						// $where = "code='{$value['funda_id']}' and close = 0";
-						// $resData = $this->turnModel->dataFetchRow(['table'=>'funda_operate_logs','where'=>$where]);
-						// $this->turnModel->dataUpdate(['table'=>'funda_operate_logs','data'=>$buyData,'where'=>$resData['id']]);
-
-
-						// $buyData['status'] = 2;
-						// $buyData['close'] = 1;
-						// $this->turnModel->dataInsert(['table'=>'funda_operate_logs','data'=>$buyData]);
+						
 					}
-
-					
 				}
 			}
 
 			//把除了今天已买的，未关闭的，卖出
-			if(empty($resData)){
-				$where = "operate_time != {$i} and close = 0"; 
-				$resData = $this->turnModel->dataFetchArray(['table'=>'funda_operate_logs','where'=>$where]);
-			}			
+			$where = "operate_time != {$i} and close = 0"; 
+			$resData = $this->turnModel->dataFetchArray(['table'=>'funda_operate_logs','where'=>$where]);
+			if(!empty($resData)){
+				foreach ($resData as $key => $value) {
+					
+					//卖出
+					$buyData = [];
+					$sellValue = $sortData[$value['code']];
+					if(!$sellValue){
+						//选出T天N只
+						//$date = date("Y-m-d",($i-86400));
+						$where = "funda_id='{$value['code']}'";
+						$sellValue = $this->turnModel->dataFetchRow(['table'=>'funda','where'=>$where,'order'=>'funda_nav_dt desc']);
+
+					}
+
+					$buyData['name'] = $sellValue['funda_name'];
+					$buyData['code'] = $sellValue['funda_id'];
+					$buyData['price'] = $sellValue['funda_current_price'];
+					$buyData['number'] = $buyNumber;
+					$buyData['sum'] = $buyData['price']*$buyData['number'];
+					$buyData['operate_time'] = $i;
+					$buyData['insert_time'] = time();
+					$buyData['status'] = 2;
+					$buyData['close'] = 1;
+					$this->turnModel->dataInsert(['table'=>'funda_operate_logs','data'=>$buyData]);
+
+					//关闭当前数据
+					$this->turnModel->dataUpdate(['table'=>'funda_operate_logs','data'=>['close'=>1],'where'=>$value['id']]);
+
+				}
+			}
+				
 		}
+
 		echo "done";
 	}
 }
