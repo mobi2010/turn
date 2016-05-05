@@ -4,10 +4,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Member extends MY_Controller {
 	public $sourceData;
 	public $statusType;
+	public $table;
 	function __construct($params = array())
 	{
 		parent::__construct(array('auth'=>false));
 		$this->statusType = [1=>'买',2=>'卖'];
+		$this->table = $_GET['table'] ? $_GET['table'] : 'operate_logs';
 	}
 
 	/**
@@ -34,14 +36,15 @@ class Member extends MY_Controller {
 		$size = 15000;
 		$start = ($page-1)*$size;
 		$where = $_GET["code"] ? "code=".$_GET["code"] : null;
-		$sum = $this->turnModel->dataFetchCount(['table'=>'operate_logs','where'=>$where]);
-		$resData = $this->turnModel->dataFetchArray(['table'=>'operate_logs','order'=>'operate_time asc','limit'=>"{$start},{$size}",'where'=>$where]);
+		$sum = $this->turnModel->dataFetchCount(['table'=>$this->table,'where'=>$where]);
+		$resData = $this->turnModel->dataFetchArray(['table'=>$this->table,'order'=>'operate_time asc','limit'=>"{$start},{$size}",'where'=>$where]);
 
 
 		$data['plData'] = $this->PL($resData);
-
+		$data['table'] = $this->table;
 		$data['resData'] = $resData;
 		$data['pageView'] = $this->load->view('fund/public/page',array('total'=>$sum,'pageSize'=>$size),true);
+		$data['tables'] = ['operate_logs'=>'实盘','funda_operate_logs'=>'模拟A','fundb_operate_logs'=>'模拟B'];
 		$this->load->view('fund/header',$data);
 		$this->load->view('fund/public/menu',$data);
 		$this->load->view('fund/member/index',$data);
@@ -54,7 +57,7 @@ class Member extends MY_Controller {
 		$id = intval($_GET['id']);
 		$data['statusType'] = $this->statusType;
 
-		$data['rowData'] = $this->turnModel->dataFetchRow(['table'=>'operate_logs','where'=>$id]);
+		$data['rowData'] = $this->turnModel->dataFetchRow(['table'=>$this->table,'where'=>$id]);
 
 		$this->load->view('fund/header',$data);
 		$this->load->view('fund/public/menu',$data);
@@ -103,9 +106,9 @@ class Member extends MY_Controller {
 		}
 		
 		if($id){
-			$id = $this->turnModel->dataUpdate(['table'=>'operate_logs','data'=>$paramsData,'where'=>$id]);
+			$id = $this->turnModel->dataUpdate(['table'=>$this->table,'data'=>$paramsData,'where'=>$id]);
 		}else{
-			$id = $this->turnModel->dataInsert(['table'=>'operate_logs','data'=>$paramsData]);
+			$id = $this->turnModel->dataInsert(['table'=>$this->table,'data'=>$paramsData]);
 		}
 		if($id){
 			redirect('member/index');
@@ -118,7 +121,7 @@ class Member extends MY_Controller {
 	 */
 	public function delete(){
 		$id = intval($_GET['id']);
-		$flag = $this->turnModel->dataDelete(['table'=>'operate_logs','where'=>$id]);
+		$flag = $this->turnModel->dataDelete(['table'=>$this->table,'where'=>$id]);
 		if($flag){
 			redirect('member/index');
 		}

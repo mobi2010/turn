@@ -9,8 +9,15 @@
 </style>
 <?php 
 
+$tform = html_select(["name"=>"table",'options'=>$tables]);
+$tform .= html_submit();
+echo html_form(['body'=>$tform]);
+
 
 echo html_a(['text'=>'添加','href'=>mobi_url('member/add')]);
+
+
+
 
 $fundFields = [
 'code'=>['title'=>'代码'],  
@@ -47,7 +54,7 @@ foreach ($resData as $key => $value) {
     $td = html_td(["body"=>$key+1]);
     foreach ($fundFields as $fk => $fv) {
         if($fk == 'name'){
-            $body = html_a(['text'=>$value[$fk],'href'=>mobi_url('member/index',['code'=>$value['code']])]);
+            $body = html_a(['text'=>$value[$fk],'href'=>mobi_url('member/index',['code'=>$value['code'],'table'=>$table])]);
         }elseif($fk == 'status'){
             $body = $statusType[$value[$fk]];
         }elseif(in_array($fk,['insert_time','operate_time'])){
@@ -58,9 +65,9 @@ foreach ($resData as $key => $value) {
         $vparams['body'] = $body;
         $td .= html_td($vparams);
     }
-    $body = html_a(['text'=>'编辑','href'=>mobi_url('member/add',['id'=>$value['id']])]);
+    $body = html_a(['text'=>'编辑','href'=>mobi_url('member/add',['id'=>$value['id'],'table'=>$table])]);
     $body .= "|";
-    $body .= html_a(['text'=>'删除','class'=>'delete','href'=>mobi_url('member/delete',['id'=>$value['id']])]);
+    $body .= html_a(['text'=>'删除','class'=>'delete','href'=>mobi_url('member/delete',['id'=>$value['id'],'table'=>$table])]);
     $td .= html_td(['body'=>$body]);
         
     $tr .= html_tr(['body'=>$td]);

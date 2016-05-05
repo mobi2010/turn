@@ -29,6 +29,8 @@ $fundFields = [
 'days' =>['title'=>'天数']
 ];
 
+echo html_a(['text'=>'模拟操盘','href'=>mobi_url('funda/simulate')]);
+
 $lightFields = ['coupon_descr_s','funda_profit_rt_next','lower_recalc_profit_rt','funda_discount_rt','funda_volume','avgPrice'];
 
 $th = html_th(["body"=>'ID']);
