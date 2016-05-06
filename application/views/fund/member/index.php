@@ -9,13 +9,12 @@
 </style>
 <?php 
 
+
+
+
 $tform = html_select(["name"=>"table",'options'=>$tables,"selected"=>$table]);
 $tform .= html_submit();
 echo html_form(['body'=>$tform]);
-
-
-echo html_a(['text'=>'添加','href'=>mobi_url('member/add')]);
-
 
 
 
@@ -32,14 +31,17 @@ $fundFields = [
 //'insert_time'=>['title'=>'时间']
 ];
 
+$body = "<br/>天数：".$plData['days'].'<br/>';
 
-$body = "买入总额：".$plData['buyPrice'].'<br/>';
+$body .= "买入总额：".$plData['buyPrice'].'<br/>';
 $body .= "卖出总额：".$plData['sellPrice'].'<br/>';
 $body .= "冻结总额：".$plData['frozenPrice'].'<br/>';
 $body .= "盈利：".$plData['profit'].'<br/>';
-$body .= "盈亏：".$plData['PL'].'%<br/>';
+$body .= "盈亏：".$plData['PL'].'%<br/><br/>';
 
-echo html_div(['body'=>$body]);
+
+echo html_div(['body'=>$body,'style'=>"color:red"]);
+echo html_a(['text'=>'添加','href'=>mobi_url('member/add')]);
 
 $th = html_th(["body"=>'ID']);
 

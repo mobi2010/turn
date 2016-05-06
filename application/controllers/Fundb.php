@@ -111,9 +111,9 @@ class Fundb extends MY_Controller {
 		
 		
 		//成交额
-		if($res['fundb_volume'] > 300){
-			$weight++;
-		}
+		// if($res['fundb_volume'] > 500){
+		// 	$weight++;
+		// }
 
 		//整体溢价率
 		if(floatval($res['fundb_base_est_dis_rt'])<0){
@@ -131,15 +131,20 @@ class Fundb extends MY_Controller {
 		}
 		
 		//利率规则
-		if(floatval($res['coupon_descr_s']) >= 4){
-			$weight--;
+		// if(floatval($res['coupon_descr_s']) >= 4){
+		// 	$weight--;
+		// }
+
+		//基金池
+		if($this->initData['dataFundb']['pool'][$res['fundb_id']]){
+			$weight++;
 		}
 
 		//下折
-		$fundb_lower_recalc_rt = floatval($res['fundb_lower_recalc_rt']);
-		if($fundb_lower_recalc_rt > 20){
-			$weight++;
-		}
+		// $fundb_lower_recalc_rt = floatval($res['fundb_lower_recalc_rt']);
+		// if($fundb_lower_recalc_rt > 20){
+		// 	$weight++;
+		// }
 
 
 		$res['weight'] = $weight;
@@ -245,4 +250,7 @@ class Fundb extends MY_Controller {
 
 		echo "done";
 	}
+
+	
+
 }

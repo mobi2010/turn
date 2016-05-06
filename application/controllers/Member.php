@@ -74,8 +74,13 @@ class Member extends MY_Controller {
 		$frozenPrice = 0;//冻结总价
 		$PL = 0;//盈亏比例
 		$profit = 0;//盈利
+		$days = 0;
 		if(!empty($resData)){
 			foreach ($resData as $key => $value) {
+				if($value['operate_time']){
+					$date = date("Y-m-d",$value['operate_time']);
+					$dates[$date][] = $value['operate_time'];
+				}
 				if(isset($value['close']) && $value['close'] == 0){
 					$frozenPrice += $value['sum'];
 				}
@@ -88,9 +93,10 @@ class Member extends MY_Controller {
 			$BP = $buyPrice-$frozenPrice;
 			$profit = $sellPrice-$BP;
 			$PL = round($profit/$BP,5)*100;
+			$days = count($dates);
 		}
 		
-		return ['frozenPrice'=>$frozenPrice,'buyPrice'=>$buyPrice,'sellPrice'=>$sellPrice,'profit'=>$profit,'PL'=>$PL];
+		return ['days'=>$days,'frozenPrice'=>$frozenPrice,'buyPrice'=>$buyPrice,'sellPrice'=>$sellPrice,'profit'=>$profit,'PL'=>$PL];
 	}
 	/**
 	 * [save description]
