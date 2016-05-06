@@ -29,10 +29,21 @@ $fundFields = [
 'fundb_base_price'=>['title'=>'母基净值'],
 'fundb_base_est_dis_rt'=>['title'=>'整体溢价率'],
 'weight'=>['title'=>'权重'],
-'days' =>['title'=>'天数']
+'days' =>['title'=>'天数'],
+'fundb_nav_dt'=>['title'=>'日期']
 ];
 
-echo html_a(['text'=>'模拟操盘','href'=>mobi_url('fundb/simulate')]);
+
+
+
+$date = $date ? $date : date("Y-m-d");
+$body = html_a(['text'=>'模拟操盘','href'=>mobi_url('fundb/simulate')])."|";
+
+$body .= "时间：".html_text(['name'=>'date','value'=>$date,'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd'})"]);
+
+$body .= html_submit(['value'=>'筛选']);
+
+echo html_form(['body'=>$body,'method'=>'get','action'=>mobi_url('fundb/index')]);
 
 
 $th = html_th(["body"=>'ID']);
@@ -71,3 +82,4 @@ foreach ($resData as $key => $value) {
 $table = html_table(['body'=>$tr,'border'=>"1","class"=>'list']);
 echo $table;
 ?>
+<script language="javascript" type="text/javascript" src="/style/plugins/My97DatePicker/WdatePicker.js"></script>

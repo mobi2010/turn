@@ -30,10 +30,12 @@ class Fundb extends MY_Controller {
 		// $start = ($page-1)*$size;
 
 		
+		$date = $_GET["date"] ? $_GET["date"] : date("Y-m-d");
 
-
+		$params['where'] =  "fundb_nav_dt = '{$date}'";
+		$data['date'] = $date;
 		$data['fundFields'] = $this->initData['dataFundb']['fields'];
-		$data['resData'] = $this->sortData();
+		$data['resData'] = $this->sortData($params);
 		// $data['pageView'] = $this->load->view('fund/public/page',array('total'=>$res['sum'],'pageSize'=>$size),true);
 		$this->load->view('fund/header',$data);
 		$this->load->view('fund/public/menu',$data);
