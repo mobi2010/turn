@@ -290,7 +290,7 @@ class Fetch extends MY_Controller {
 		$key = "arbitrage";
 		$dataFunda = $this->initData['dataArbitrage'];
 		$url = $dataFunda['fetchUrl'].$this->getMicrotime($params);
-		$option = [CURLOPT_COOKIE=>'kbz__user_login=1ubd08_P1ebax9aX8dXZgq6l0dHU5_Dk293K1I3Zk9ewxtGapLHbza2jqsSmlaSplKSX1qzWma-k3MemmZSzjuXK2NfSlKqfqZOomZSzjsWi0tagtujm4M7iwqKtj6CBnMbWzOLa69Hpya6Yqt7V2eWVttrPl7HJgcuYkqDApanUnKKMuNLmzdjPxtKs3e2knqyjpZWsgZvDqcSuwKWV1eLX3IK9xtbj0JmBt-Hn2ObRppasj6Omk6SapKesmpm_2MjX09ynlqOYoqyr; kbzw__Session=icjmk2v752sr8qgk3936nlg1g7; kbz_newcookie=1; kbzw_r_uname=zsc; kbzw__user_login=7Obd08_P1ebax9aX8dXZgrKk49nU49jj69nH1pfalNqZ3NisqJnWxaiwqMupoKiTqZWt2abZkaaZ2d6loZqnpNffxdXUnqmUopKmsZakpsG4wNOMxObt4c3cwqOuo5mZlMTD2crl6-LryauBvefpzuWMxMPZgcbKk9CBoZHTqqXIrJWXo-bR49zK3cO7yuioqpywmqqYlonCv8fFrZyB4OLgzpmz3MXh0KCXtuDT387ZqKqZp5yllKyXqKWrroHDwtra59KooaqZpJSt; Hm_lvt_164fe01b1433a19b507595a43bf58262=1461579122,1461727656; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1462530243'];
+		$option = [CURLOPT_COOKIE=>'kbzw_r_uname=zsc; kbzw__user_login=7Obd08_P1ebax9aX8dXZgrKk49nU49jj69nH1pfalNqZ3NisqJnWxaiwqMupoKiTqZWt2abZkaaZ2d6loZqnpNffxdXUnqmUopKmsZakpsG4wNOMxObt4c3cwqOuo5mZlM7L5MXm7uaYr8SBpamjmbSMzrHNl6ugk7nR4M3Z0NrLxNXrkauUrqWmroGYrLzNwrWljOPL4caXvtjbzN-KlLzd2-jZ3JGql6WnoaqVqZGisaWJzM3dw-jKpqymr4-jlw..; kbzw__Session=29af64oqpqsm3lr2k1etga68i2; kbz_newcookie=1; Hm_lvt_164fe01b1433a19b507595a43bf58262=1462374464,1462460202,1462555262,1462804244; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1462804275'];
 		$httpData = $this->curl->get(['url'=>$url,'option'=>$option]);
 		$jsonPath = $this->getJsonPath($params);
 		if($httpData){

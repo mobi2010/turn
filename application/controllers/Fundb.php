@@ -120,6 +120,10 @@ class Fundb extends MY_Controller {
 		//整体溢价率
 		if(floatval($res['fundb_base_est_dis_rt'])<0){
 			$weight += abs($res['fundb_base_est_dis_rt']);
+			//基金池
+			if($this->initData['dataFundb']['pool'][$res['fundb_id']]){
+				$weight++;
+			}
 		}
 		
 		//溢价率
@@ -137,10 +141,8 @@ class Fundb extends MY_Controller {
 		// 	$weight--;
 		// }
 
-		//基金池
-		if($this->initData['dataFundb']['pool'][$res['fundb_id']]){
-			$weight++;
-		}
+		
+		
 
 		//下折
 		// $fundb_lower_recalc_rt = floatval($res['fundb_lower_recalc_rt']);
