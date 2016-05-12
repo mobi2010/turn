@@ -35,6 +35,25 @@ class Fetch extends MY_Controller {
 	}
 
 	/**
+	 * 导出数据库
+	 * @return [type] [description]
+	 */
+	public function dump(){
+		$fileName = 'turn-'.date('Y-m-d').'.sql'; 
+		$filePath = APPPATH.'/assets/data/'.$fileName;
+		echo $shell = "D:/progra~1/xampp/mysql/bin/mysqldump -hlocalhost -uroot -proot turn>{$filePath}";
+		//$shell = "D:/progra~1/xampp/mysql/bin/mysqldump -hlocalhost -uroot -proot turn > turn-2016-05-12.sql";
+		$result = exec($shell);
+		var_dump($result);
+		$res['msg'] = $fileName;
+		$res['code'] = 200;
+		if(!$result){
+			$res['code'] = 500;
+		}
+		$this->printer($res);
+
+	}
+	/**
 	 * 抓取
 	 * @return [type] [description]
 	 */
@@ -290,7 +309,7 @@ class Fetch extends MY_Controller {
 		$key = "arbitrage";
 		$dataFunda = $this->initData['dataArbitrage'];
 		$url = $dataFunda['fetchUrl'].$this->getMicrotime($params);
-		$option = [CURLOPT_COOKIE=>'kbz__user_login=1ubd08_P1ebax9aX8dXZgq6l0dHU5_Dk293K1I3Zk9ewxtGapLHbza2jqsSmlaSplKSX1qzWma-k3MemmZSzjuXK2NfSlKqfqZOomZSzjsWi0tagtujm4M7iwqKtj6CBnMbWzOLa69Hpya6Yqt7V2eWVttrPl7HJgcuYkqDApanUnKKMuNLmzdjPxtKs3e2knqyjpZWsgZvDqcSuwKWV1eLX3IK9xtbj0JmBt-Hn2ObRppasj6Omk6SapKesmpm_2MjX09ynlqOYoqyr; kbzw__Session=icjmk2v752sr8qgk3936nlg1g7; kbz_newcookie=1; Hm_lvt_164fe01b1433a19b507595a43bf58262=1461579122,1461727656; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1463046189; kbzw_r_uname=zsc; kbzw__user_login=7Obd08_P1ebax9aX8dXZgrKk49nU49jj69nH1pfalNqZ3NisqJnWxaiwqMupoKiTqZWt2abZkaaZ2d6loZqnpNffxdXUnqmUopKmsZakpsG4wNOMxObt4c3cwqOuo5mZlMTD2crl6-LryauBvefpzuWMxMPZgcbKk9CBoZHTqqXIrJWXo-bR49zK3cO7yuioqpywmqqYlonCv8fFrZyB4OLgzpmz3MXh0KCXtuDT387ZqKqZp5yllKyXqKWrroHDwtra59KooaqZpJSt'];
+		$option = [CURLOPT_COOKIE=>'kbzw__Session=4v8em93giqc15ds9fqa5e92mi6; kbz_newcookie=1; kbzw_r_uname=zsc; kbzw__user_login=7Obd08_P1ebax9aX8dXZgrKk49nU49jj69nH1pfalNqZ3NisqJnWxaiwqMupoKiTqZWt2abZkaaZ2d6loZqnpNffxdXUnqmUopKmsZakpsG4wNOMxObt4c3cwqOuo5mZlM7L5MXm7uaYr8SBpamjmbSMzrHNl6ugk7nR4M3Z0NrLxNXrkauUrqWmroGYrLzNwrWljOPL4caXvtjbzN-KlLzd2-jZ3JGql6WnoaqVqZGisaWJzM3dw-jKpqymr4-jlw..; Hm_lvt_164fe01b1433a19b507595a43bf58262=1463063415; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1463063525'];
 		$httpData = $this->curl->get(['url'=>$url,'option'=>$option]);
 		$jsonPath = $this->getJsonPath($params);
 		if($httpData){

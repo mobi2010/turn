@@ -20,4 +20,22 @@
 	?>
 </div>
 
+
+<div style="margin: 3em">
+	<?php 
+	echo html_a(['text'=>'导出数据库','id'=>'mysqldump']);
+	?>
+</div>
+
 <script language="javascript" type="text/javascript" src="/style/plugins/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() { 
+		//导出数据库
+		$('#mysqldump').click(function(){
+			$.get("<?=base_url('fetch/dump')?>",function(dt){
+				$.mobi.alert(dt);
+			})
+			return false;
+		})
+	})
+</script>
