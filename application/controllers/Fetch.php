@@ -40,7 +40,7 @@ class Fetch extends MY_Controller {
 	 */
 	public function dump(){
 		$fileName = 'turn-'.date('Y-m-d').'.sql'; 
-		$filePath = APPPATH.'/assets/data/'.$fileName;
+		$filePath = APPPATH.'/assets/sql/'.$fileName;
 		echo $shell = "D:/progra~1/xampp/mysql/bin/mysqldump -hlocalhost -uroot -proot turn>{$filePath}";
 		//$shell = "D:/progra~1/xampp/mysql/bin/mysqldump -hlocalhost -uroot -proot turn > turn-2016-05-12.sql";
 		$result = exec($shell);
