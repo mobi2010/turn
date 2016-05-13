@@ -75,11 +75,15 @@ class Fundb extends MY_Controller {
 	 * @return [type] [description]
 	 */
 	function dlist(){
+		$by = $_GET['by'] == 'desc' ? 'asc' : 'desc';
 		$fundb_id = $_GET['fundb_id'];
-		$resData = $this->turnModel->dataFetchArray(['table'=>'fundb','where'=>'fundb_id='.$fundb_id,'order'=>'fundb_nav_dt desc']);
+		$order = $_GET['order'] ? $_GET['order'] : 'fundb_nav_dt';
+		$resData = $this->turnModel->dataFetchArray(['table'=>'fundb','where'=>'fundb_id='.$fundb_id,'order'=>$order.' '.$by]);
+		
 		$data['fundFields'] = $this->initData['dataFundb']['fields'];
 		$data['resData'] = $resData;
-
+		$data['by'] = $by;
+		$data['fundb_id'] = $fundb_id;
 
 		$this->load->view('fund/header',$data);
 		$this->load->view('fund/public/menu',$data);
