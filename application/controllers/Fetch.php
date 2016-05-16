@@ -41,13 +41,12 @@ class Fetch extends MY_Controller {
 	public function dump(){
 		$fileName = 'turn-'.date('Y-m-d').'.sql'; 
 		$filePath = APPPATH.'/assets/sql/'.$fileName;
-		echo $shell = "D:/progra~1/xampp/mysql/bin/mysqldump -hlocalhost -uroot -proot turn>{$filePath}";
+		$shell = "D:/progra~1/xampp/mysql/bin/mysqldump -hlocalhost -uroot -proot turn>{$filePath}";
 		//$shell = "D:/progra~1/xampp/mysql/bin/mysqldump -hlocalhost -uroot -proot turn > turn-2016-05-12.sql";
-		$result = exec($shell);
-		var_dump($result);
+		$result = system($shell,$status);
 		$res['msg'] = $fileName;
 		$res['code'] = 200;
-		if(!$result){
+		if($status){
 			$res['code'] = 500;
 		}
 		$this->printer($res);
@@ -301,25 +300,7 @@ class Fetch extends MY_Controller {
 	}
 
 
-	/**
-	 * 抓取母基
-	 * @return [type] [description]
-	 */
-	public function fetchArbitrage($params=[]){
-		$key = "arbitrage";
-		$dataFunda = $this->initData['dataArbitrage'];
-		$url = $dataFunda['fetchUrl'].$this->getMicrotime($params);
-		$option = [CURLOPT_COOKIE=>'kbzw__Session=4v8em93giqc15ds9fqa5e92mi6; kbz_newcookie=1; kbzw_r_uname=zsc; kbzw__user_login=7Obd08_P1ebax9aX8dXZgrKk49nU49jj69nH1pfalNqZ3NisqJnWxaiwqMupoKiTqZWt2abZkaaZ2d6loZqnpNffxdXUnqmUopKmsZakpsG4wNOMxObt4c3cwqOuo5mZlM7L5MXm7uaYr8SBpamjmbSMzrHNl6ugk7nR4M3Z0NrLxNXrkauUrqWmroGYrLzNwrWljOPL4caXvtjbzN-KlLzd2-jZ3JGql6WnoaqVqZGisaWJzM3dw-jKpqymr4-jlw..; Hm_lvt_164fe01b1433a19b507595a43bf58262=1463063415; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1463063525'];
-		$httpData = $this->curl->get(['url'=>$url,'option'=>$option]);
-		$jsonPath = $this->getJsonPath($params);
-		if($httpData){
-			echo $url."<br/>";
-			$this->file->setData(['filePath'=>$jsonPath,'fileName'=>$key.'.json','data'=>$httpData,'flag'=>0]);
-		}else{
-			echo "get {$key} data fail";
-			exit;
-		}
-	}
+	
 
 	/**
 	 * 抓取母基
@@ -429,5 +410,25 @@ class Fetch extends MY_Controller {
        $time = $params['date'] ? strtotime($params['date']." 18:15:13") : time();
        $res = $time.substr($microtime,2,3);
        return $res;
+	}
+
+	/**
+	 * 抓取母基
+	 * @return [type] [description]
+	 */
+	public function fetchArbitrage($params=[]){
+		$key = "arbitrage";
+		$dataFunda = $this->initData['dataArbitrage'];
+		$url = $dataFunda['fetchUrl'].$this->getMicrotime($params);
+		$option = [CURLOPT_COOKIE=>'kbz_newcookie=1; kbzw_r_uname=zsc; kbzw__user_login=7Obd08_P1ebax9aX8dXZgrKk49nU49jj69nH1pfalNqZ3NisqJnWxaiwqMupoKiTqZWt2abZkaaZ2d6loZqnpNffxdXUnqmUopKmsZakpsG4wNOMxObt4c3cwqOuo5mZlM7L5MXm7uaYr8SBpamjmbSMzrHNl6ugk7nR4M3Z0NrLxNXrkauUrqWmroGYrLzNwrWljOPL4caXvtjbzN-KlLzd2-jZ3JGql6WnoaqVqZGisaWJzM3dw-jKpqymr4-jlw..; kbzw__Session=isnu3b5gcadj7d6fkpkhjhqv84; Hm_lvt_164fe01b1433a19b507595a43bf58262=1463063415,1463287099,1463418386; Hm_lpvt_164fe01b1433a19b507595a43bf58262=1463418398'];
+		$httpData = $this->curl->get(['url'=>$url,'option'=>$option]);
+		$jsonPath = $this->getJsonPath($params);
+		if($httpData){
+			echo $url."<br/>";
+			$this->file->setData(['filePath'=>$jsonPath,'fileName'=>$key.'.json','data'=>$httpData,'flag'=>0]);
+		}else{
+			echo "get {$key} data fail";
+			exit;
+		}
 	}
 }
