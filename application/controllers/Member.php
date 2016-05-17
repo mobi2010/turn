@@ -42,7 +42,7 @@ class Member extends MY_Controller {
 
 		$data['plData'] = $this->PL($resData);
 		$data['table'] = $this->table;
-		$data['resData'] = $resData;
+		$data['resData'] = $where ? $resData : mobi_array_kv(['data'=>$resData,'skey'=>'code']);
 		$data['pageView'] = $this->load->view('fund/public/page',array('total'=>$sum,'pageSize'=>$size),true);
 		$data['tables'] = ['operate_logs'=>'实盘','funda_operate_logs'=>'模拟A','fundb_operate_logs'=>'模拟B'];
 		$this->load->view('fund/header',$data);
