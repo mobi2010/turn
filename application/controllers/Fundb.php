@@ -117,9 +117,9 @@ class Fundb extends MY_Controller {
 		
 		
 		//成交额
-		// if($res['fundb_volume'] > 500){
-		// 	$weight++;
-		// }
+		if($res['fundb_volume'] < 300){
+			$weight -= 10;
+		}
 
 		//整体溢价率
 		if(floatval($res['fundb_base_est_dis_rt'])<0){
@@ -145,8 +145,10 @@ class Fundb extends MY_Controller {
 		// 	$weight--;
 		// }
 
-		
-		
+		//涨幅下降的++
+		if(floatval($res['fundb_increase_rt'])<0){
+			$weight += 1;
+		}
 
 		//下折
 		// $fundb_lower_recalc_rt = floatval($res['fundb_lower_recalc_rt']);
