@@ -17,6 +17,18 @@ $bodyClass = $bodyClass ? $bodyClass : "body";
 	<script src="/style/js/mobi.js"></script>	
 
 </head>
+<style type="text/css">
+.list{}
+
+.list tr{clear:both;border-top:#CCCCCC solid thin;}
+.list tr:hover{background:#CC6600}
+.list td{padding: 0.5em}
+
+.list .avgPrice{background:#CC6600}
+.red{color:red}
+.green{color:green}
+
+</style>
 <script type="text/javascript">
 	$(document).ready(function() { 
 		$.mobi.init();

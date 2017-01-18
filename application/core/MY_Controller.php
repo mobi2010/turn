@@ -81,6 +81,9 @@ class MY_Controller extends CI_Controller
 		//套利
 		$this->initData['dataArbitrage'] = require(APPPATH.'/assets/data/arbitrage.php');
 
+		//龙虎榜
+		$this->initData['dataLhb'] = require(APPPATH.'/assets/data/lhb.php');
+
 		$this->load->vars('initData',$this->initData);//映射到模板
 		return $this->initData;
 	}
