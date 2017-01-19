@@ -1,15 +1,22 @@
-
-
-
 <?php
 
 $fundFields = $this->initData['dataLhb']['fields'];
-$date = $date ? $date : date("Y-m-d");
-$body = html_text(['name'=>'date','value'=>$date,'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd'})"]);
+$body = "code:".html_text(['name'=>'SCode','value'=>$SCode]);
+
+$body .= "名称:".html_text(['name'=>'SName','value'=>$SName]);
+
+$body .= "日期:".html_text(['name'=>'date','value'=>$date,'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd'})"]);
 
 $body .= html_submit(['value'=>'筛选']);
 
-echo html_form(['body'=>$body,'method'=>'get','action'=>mobi_url('fundb/index')]);
+$body .= str_repeat("&nbsp;",10).html_a(['text'=>'分析','href'=>mobi_url('lhb/analysis')]);
+
+$body .= str_repeat("&nbsp;",10).html_a(['text'=>'合并日期','href'=>mobi_url('lhb/index',$_GET+['group'=>'Tdate'])]);
+
+
+$body .= str_repeat("&nbsp;",10).html_a(['text'=>'重置','href'=>mobi_url('lhb/index')]);
+
+echo html_form(['body'=>$body,'method'=>'get','action'=>mobi_url('lhb/index')]);
 
 
 $th = html_th(["body"=>'ID']);
@@ -27,6 +34,22 @@ foreach ($resData as $key => $value) {
     $td = html_td(["body"=>$key+1]);
     foreach ($fundFields as $fk => $fv) {
         $body = $value[$fk];
+
+
+        $body = $fk == 'SName' ? html_a(['text'=>$body,'href'=>mobi_url('lhb/index',['SCode'=>$value['SCode']]),'target'=>'_blank']) : $body;
+
+
+        if(in_array($fk,['Ltsz']))
+            $body = $body/100000000;
+        if(in_array($fk,['JmMoney','Bmoney','Smoney','ZeMoney','Turnover'])){
+            $body = $body/10000;
+        }
+
+        if(in_array($fk,['ClosePrice','Chgradio','JmMoney','Bmoney','Smoney','ZeMoney','Turnover','JmRate','ZeRate','Dchratio','Ltsz'])){
+            $body = round($body,2);
+        }
+
+
 
         if(in_array($fk,['Chgradio','JmRate','ZeRate','Dchratio'])){
             $body .= "%";

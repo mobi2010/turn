@@ -62,7 +62,7 @@ class MY_Model extends CI_Model {
         $where = $this->dataWhere($param['where']);        
         $group = $param['group'] ? " group by ".$param['group'] : null;
         $having = $param['having'] ? " having ".$param['having'] : null;
-        $this->sqls[] = $sql = "select count(*) as sum from {$table} {$where} limit 1";
+        $this->sqls[] = $sql = "select count(*) as sum from {$table} {$where} {$group} limit 1";
         $res = $this->db->query($sql)->row_array();
         return intval($res['sum']);
     }
@@ -181,7 +181,7 @@ class MY_Model extends CI_Model {
      * @return [type]        [description]
      */
     private function dataWhere($where){
-        if(isset($where)){
+        if($where){
             $where = is_numeric($where) ? " where id=".$where : " where ".$where;
         } else {
             $where = null;
