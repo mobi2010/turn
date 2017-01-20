@@ -27,6 +27,7 @@ foreach ($fundFields as $key => $value) {
     $th .= html_th($fparams);
 }
 
+$th .= html_th(['body'=>'其他']);
 $tr = html_tr(['body'=>$th]);
 
 
@@ -74,6 +75,10 @@ foreach ($resData as $key => $value) {
         $vparams['body'] = $body;
         $td .= html_td($vparams);
     }
+    $tdbody = html_a(['text'=>'历史','href'=>"http://stockpage.10jqka.com.cn/{$value['SCode']}/funds/#funds_lszjsj",'target'=>'_blank']);
+    $tdbody .= "&nbsp;|&nbsp;";
+    $tdbody .= html_a(['text'=>'详细','href'=>"http://stockpage.10jqka.com.cn/{$value['SCode']}/",'target'=>'_blank']);
+    $td .= html_td(['body'=>$tdbody]);
     $tr .= html_tr(['body'=>$td]);
 }
 $table = html_table(['body'=>$tr,'border'=>"1","class"=>'list']);
