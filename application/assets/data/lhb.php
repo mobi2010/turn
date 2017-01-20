@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 //$data['fetchUrl'] = 'https://www.jisilu.cn/data/sfnew/fundb_list/?___t=1460995573504';
-$data['fetchUrl'] = 'http://data.eastmoney.com/stock/tradedetail/2017-01-17.html';
+$data['fetchUrl'] = 'http://data.eastmoney.com/stock/tradedetail.html';
 
 $data['fields'] = [
 			'SCode'=>['title'=>'代码'],

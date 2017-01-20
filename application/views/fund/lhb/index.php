@@ -16,6 +16,8 @@ $body .= str_repeat("&nbsp;",10).html_a(['text'=>'合并日期','href'=>mobi_url
 
 $body .= str_repeat("&nbsp;",10).html_a(['text'=>'重置','href'=>mobi_url('lhb/index')]);
 
+$body .= str_repeat("&nbsp;",10).html_a(['text'=>'龙虎榜','href'=>$this->initData['dataLhb']['fetchUrl'],'target'=>'_blank']);
+
 echo html_form(['body'=>$body,'method'=>'get','action'=>mobi_url('lhb/index')]);
 
 
