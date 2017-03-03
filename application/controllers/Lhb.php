@@ -135,4 +135,14 @@ class Lhb extends MY_Controller {
 		
 		echo "done";
 	}
+
+	/**
+	 * 策略
+	 * @return [type] [description]
+	 */
+	public function tactics(){
+		$tdate = date("Y-m-d");
+		$lhbData = $this->turnModel->dataFetchArray(['table'=>'lhb','where'=>"Tdate='{$tdate}' and Chgradio like '-%' order by CAST(`Chgradio` AS DECIMAL)"]);
+		var_dump($lhbData);
+	}
 }
