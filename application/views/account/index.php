@@ -1,8 +1,11 @@
 <?php
 
-$body = "开始日期:".html_text(['name'=>'sdate','value'=>$sdate,'onClick'=>"WdatePicker({dateFmt:'yyyy-MM'})"]);
+$options = [1=>'华泰',2=>'广发'];
 
-$body .= "结束日期:".html_text(['name'=>'edate','value'=>$edate,'onClick'=>"WdatePicker({dateFmt:'yyyy-MM'})"]);
+$body = "开始日期:".html_text(['name'=>'sdate','value'=>$_GET['sdate'],'onClick'=>"WdatePicker({dateFmt:'yyyy-MM'})"]);
+
+$body .= "结束日期:".html_text(['name'=>'edate','value'=>$_GET['edate'],'onClick'=>"WdatePicker({dateFmt:'yyyy-MM'})"]);
+$body .= "账号:".html_select(['name'=>'type','options'=>[0=>'请选择']+$options,'selected'=>$type]);
 
 $body .= html_submit(['value'=>'筛选']);
 echo html_form(['body'=>$body,'method'=>'get','action'=>mobi_url('account/index')]);
@@ -10,9 +13,10 @@ echo html_form(['body'=>$body,'method'=>'get','action'=>mobi_url('account/index'
 echo "<br/>";
 
 
-$body = "日期:".html_text(['name'=>'time','value'=>date("Y-m",$time),'onClick'=>"WdatePicker({dateFmt:'yyyy-MM'})"]);
+$body = "日期:".html_text(['name'=>'time','value'=>$time,'onClick'=>"WdatePicker({dateFmt:'yyyy-MM'})"]);
 
 $body .= "盈利:".html_text(['name'=>'profit','value'=>$profit]);
+$body .= "账号:".html_select(['name'=>'type','options'=>$options,'selected'=>$type]);
 
 
 $body .= html_submit(['value'=>'添加','name'=>'add']);
@@ -24,6 +28,8 @@ echo "<br/>";
 $th = html_th(["body"=>'ID']);
 $th .= html_th(['body'=>'时间']);
 $th .= html_th(['body'=>'盈利']);
+$th .= html_th(['body'=>'账户']);
+
 $tr = html_tr(['body'=>$th]);
 
 
@@ -34,6 +40,7 @@ foreach ($resData as $key => $value) {
         $profit = strstr($value['profit'],'-') ? '<span style="color:#00FF00">' : '<span style="color:#FF0000">';
         $profit .= $value['profit']."</span>";
         $td .= html_td(['body'=>$profit]);
+        $td .= html_td(['body'=>$options[$value['type']]]);
         $tr .= html_tr(['body'=>$td]);
 }
 $table = html_table(['body'=>$tr,'border'=>"1","class"=>'list']);

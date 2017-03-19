@@ -28,15 +28,17 @@ class Account extends MY_Controller {
 	 */
 	public function index()
 	{	
-		$data['time'] = time();
+		$data['type'] = $_GET['type'];
 
 
 
-		if($_POST['time'] && $_POST['profit']){
+		if($_POST['time'] && $_POST['profit'] && $_POST['type']){
 			$insertData['time'] = strtotime($_POST['time']);
-			$data['profit'] = $insertData['profit'] = trim($_POST['profit']);
 			$data['time'] = $_POST['time'];
-			$dataRow = $this->turnModel->dataFetchRow(['table'=>'account','where'=>'time='.$insertData['time']]);
+			$data['profit'] = $insertData['profit'] = trim($_POST['profit']);
+			$data['type'] = $insertData['type'] = (int)$_POST['type'];
+			$where = "time={$insertData['time']} and type={$insertData['type']}";
+			$dataRow = $this->turnModel->dataFetchRow(['table'=>'account','where'=>$where]);
 
 			if($dataRow){
 				$this->turnModel->dataUpdate(['table'=>'account','data'=>$insertData,'where'=>$dataRow['id']]);
@@ -45,13 +47,21 @@ class Account extends MY_Controller {
 			}
 
 		}
-		if($_GET['sdate'] && $_GET['edate']){
+
+
+		if($_GET['sdate']){
 			$sdate = strtotime($_GET['sdate']);
-			$edate = strtotime($_GET['edate']);
-			$data['sdate'] = $_GET['sdate'];
-			$data['edate'] = $_GET['edate'];
-			$where = "time between {$sdate} and {$edate}";
+			$whereArray[] = "time>={$sdate}";
 		}
+		if($_GET['edate']){
+			$edate = strtotime($_GET['edate']);
+			$whereArray[] = "time<={$edate}";
+		}
+		if($_GET['type']){
+			$data['type'] = intval($_GET['type']);
+			$whereArray[] = "type={$data['type']}";
+		}
+		$where = $whereArray ? implode(' and ',$whereArray) : null;
 
 		$params = ['table'=>'account','where'=>$where,'order'=>'time desc'];
 		$data['resData'] = $this->turnModel->dataFetchArray($params);
