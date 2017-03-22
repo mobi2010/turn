@@ -33,6 +33,12 @@ class Xuangu extends MY_Controller {
 		$id = intval($_GET['id']);
 		if($id){
 			$dataRow = $this->turnModel->dataFetchRow(['table'=>'xuangu','where'=>$id]);
+
+			if($_GET['type'] == 'copy'){
+				unset($dataRow['id']);
+				unset($dataRow['rise']);
+				$dataRow['add_time'] = time()-4*3600;
+			}
 			$data['model'] = $dataRow;
 		}
 

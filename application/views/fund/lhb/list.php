@@ -18,7 +18,7 @@ echo html_form(['body'=>$body,'method'=>'get','action'=>mobi_url('lhb/analysis')
 $th = html_th(["body"=>'ID']);
 
 foreach ($fundFields as $key => $value) {
-    $fparams['body'] = $value['title'];
+    $fparams['body'] = $key == 'Chgradio' ? html_a(['text'=>$value['title'],'href'=>mobi_url('lhb/analysis',['startDate'=>$_GET['startDate'],'endDate'=>$_GET['endDate'],'orderby'=>$orderby])]) : $value['title'];
     $th .= html_th($fparams);
 }
 $th .= html_th(['body'=>'其他']);

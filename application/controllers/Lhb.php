@@ -85,7 +85,20 @@ class Lhb extends MY_Controller {
 
 		$sql = "SELECT *,count(SCode) as total FROM lhb ";
 		$sql .= $where ? 'where '.$where : null;
-		$sql .= " group by SCode order by total desc ";
+		$sql .= " group by SCode ";
+		
+		$data['orderby'] = 'desc';
+		if($_GET['orderby'] == 'desc'){
+			$sql .= " order by Chgradio*1 desc ";
+			$data['orderby'] = 'asc';
+		}elseif($_GET['orderby'] == 'asc'){
+			$sql .= " order by Chgradio*1 asc ";
+		}else{
+			$sql .= " order by total desc ";
+		}
+
+
+
 		$data['resData'] = $this->turnModel->fetchArrayBySql(['sql'=>$sql]);
 
 		
