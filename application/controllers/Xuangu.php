@@ -51,7 +51,7 @@ class Xuangu extends MY_Controller {
 
 		$where = $whereArray ? implode(' and ',$whereArray) : null;
 
-		$params = ['table'=>'xuangu','where'=>$where,'order'=>'expect asc'];
+		$params = ['table'=>'xuangu','where'=>$where,'order'=>'expect desc'];
 		$data['resData'] = $this->turnModel->dataFetchArray($params);
 		$data['model'] = $data['model'] ? $data['model'] : [];
 		$this->load->view('fund/header',$data);

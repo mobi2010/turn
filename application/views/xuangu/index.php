@@ -1,6 +1,6 @@
 <?php
 
-$options = [1=>'增持','减持','保持'];
+$options = [1=>'卖出','减持','中性','增持','买入'];
 
 $body = "开始日期:".html_text(['name'=>'sdate','value'=>$_GET['sdate'],'onClick'=>"WdatePicker({dateFmt:'yyyy-MM-dd'})"]);
 
@@ -10,8 +10,28 @@ $body .= html_submit(['value'=>'筛选']);
 $yesterday = date("Y-m-d",strtotime("-1 day"));
 $today = date("Y-m-d");
 $tomorrow = date("Y-m-d",strtotime("+1 day"));
+
+
+$startDate = $_GET['sdate'] ? $_GET['sdate'] : date("Y-m-d");
+$startTime = strtotime($startDate);
+if($_GET['type'] == 'minus'){//减法
+    $startTime = $startTime-3600*24;
+    $startDate = date("Y-m-d",$startTime);
+}elseif($_GET['type'] == 'plus'){//加法
+    $startTime = $startTime+3600*24;
+    $startDate = date("Y-m-d",$startTime);
+}
+
+
+$endDate = date("Y-m-d",$startTime+3600*24);
+
+
+$body .= str_repeat("&nbsp;",4).html_a(['text'=>'减一天','href'=>mobi_url('xuangu/index',['type'=>'minus','sdate'=>$startDate,'edate'=>$endDate])]);
 $body .= str_repeat("&nbsp;",4).html_a(['text'=>'昨天','href'=>mobi_url('xuangu/index',['sdate'=>$yesterday,'edate'=>$today])]);
 $body .= str_repeat("&nbsp;",4).html_a(['text'=>'今天','href'=>mobi_url('xuangu/index')]);
+$body .= str_repeat("&nbsp;",4).html_a(['text'=>'加一天','href'=>mobi_url('xuangu/index',['type'=>'plus','sdate'=>$startDate,'edate'=>$endDate])]);
+$body .= str_repeat("&nbsp;",4).html_a(['text'=>'板块','href'=>'http://q.10jqka.com.cn/gn/','target'=>'_blank']);
+$body .= str_repeat("&nbsp;",4).html_a(['text'=>'龙虎榜','href'=>'http://data.10jqka.com.cn/market/longhu/','target'=>'_blank']);
 
 echo html_form(['body'=>$body,'method'=>'get','action'=>mobi_url('xuangu/index')]);
 
@@ -33,21 +53,29 @@ $score = 0;//得分
 $total = count($resData);//总数
 foreach ($resData as $key => $value) {
         $td = html_td(['body'=>++$key]);
-        $td .= html_td(['body'=>$value['code']]);
+        $code = html_a(['text'=>$value['code'],'href'=>"http://doctor.10jqka.com.cn/{$value['code']}/",'target'=>'_blank']);
+
+        $td .= html_td(['body'=>$code]);
 
         $name = html_a(['text'=>$value['name'],'href'=>"http://stockpage.10jqka.com.cn/{$value['code']}/",'target'=>'_blank']);
         $td .= html_td(['body'=>$name]);
 
         $rise = floatval($value['rise']);
-        if($value['expect'] == 1){//增持
-            $expect = '<span style="color:#FF0000">';
-            $score = $rise>0 ? $score+1 : $score;
+        if($value['expect'] == 1){//卖出
+            $expect = '<span style="color:#00FF00;font-weight:bold">';
+            $score = $rise<-4 ? $score+1 : $score;
         }elseif($value['expect'] == 2){//减持
             $expect = '<span style="color:#00FF00">';
-            $score = $rise<0 ?  $score+1 : $score;
-        }else{//保持
+            $score = $rise<0 && $rise>=-4 ?  $score+1 : $score;
+        }elseif($value['expect'] == 3){//中性
             $expect = '<span>';
-            $score = $rise>0 ? $score+1 : $score;
+            $score = $rise>=0 ? $score+1 : $score-1;
+        }elseif($value['expect'] == 4){//增持
+            $expect = '<span style="color:#FF0000">';
+            $score = $rise>0 && $rise<=4 ?  $score+1 : $score;
+        }elseif($value['expect'] == 5){//买入
+            $expect = '<span style="color:#FF0000;font-weight:bold">';
+            $score = $rise>4 ?  $score+1 : $score;
         }
         $expect .= $options[$value['expect']]."</span>";
         $td .= html_td(['body'=>$expect]);
@@ -86,11 +114,19 @@ if($ratio>50){
 $htmlTotal = "<span style='color:{$color}'>{$ratio}%</span>";
 echo html_div(['style'=>"font-size:18px; font-weight:bold",'body'=>"正确率:".$htmlTotal]);
 
-$rule = "总分:0;增/减(持):预判正确+1分;保持:涨幅为正+1分;预判率:所得分/总数";
+$rule = "总分:0;<br/>";
+$rule .= "卖出:跌幅>4%;加一分<br/>";
+$rule .= "减持:跌幅<=4%;加一分<br/>";
+$rule .= "中性:涨了加一分;跌了减一分<br/>";
+$rule .= "增持:涨幅<=4%;加一分<br/>";
+$rule .= "买入:涨幅>4%;加一分<br/>";
+$rule .= "正确率:所得分/总数<br/>";
+
+
 echo html_div(['style'=>"font-size:12px;color:#999999",'body'=>$rule]);
 
 
-echo "<hr/>";
+echo "<hr style='margin:1em 0;'/>";
 
 
 $add_time = $model['add_time'] ? $model['add_time'] : time()-3600*4;
