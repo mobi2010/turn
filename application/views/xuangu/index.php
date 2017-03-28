@@ -63,19 +63,19 @@ foreach ($resData as $key => $value) {
         $rise = floatval($value['rise']);
         if($value['expect'] == 1){//卖出
             $expect = '<span style="color:#00FF00;font-weight:bold">';
-            $score = $rise<-4 ? $score+1 : $score;
+            $score = $rise<0 ? $score+1 : $score-1;
         }elseif($value['expect'] == 2){//减持
             $expect = '<span style="color:#00FF00">';
-            $score = $rise<0 && $rise>=-4 ?  $score+1 : $score;
+            $score = $rise<=4 && $rise>=-4 ?  $score+1 : $score-1;
         }elseif($value['expect'] == 3){//中性
             $expect = '<span>';
-            $score = $rise>=0 ? $score+1 : $score-1;
+            $score = $rise>0 ? $score+1 : $score-1;
         }elseif($value['expect'] == 4){//增持
             $expect = '<span style="color:#FF0000">';
-            $score = $rise>0 && $rise<=4 ?  $score+1 : $score;
+            $score = $rise>0 ?  $score+1 : $score-1;
         }elseif($value['expect'] == 5){//买入
             $expect = '<span style="color:#FF0000;font-weight:bold">';
-            $score = $rise>4 ?  $score+1 : $score;
+            $score = $rise>0 ?  $score+1 : $score-1;
         }
         $expect .= $options[$value['expect']]."</span>";
         $td .= html_td(['body'=>$expect]);
@@ -104,9 +104,9 @@ echo "<br/>";
 $ratio = $total == 0 ? 0 :  round($score/$total*100 ,2); 
 
 
-if($ratio>50){
+if($ratio>0){
     $color = "#FF0000";
-}elseif($ratio<50){
+}elseif($ratio<0){
     $color = "#00FF00";
 }else{
     $color = "";
@@ -115,11 +115,11 @@ $htmlTotal = "<span style='color:{$color}'>{$ratio}%</span>";
 echo html_div(['style'=>"font-size:18px; font-weight:bold",'body'=>"正确率:".$htmlTotal]);
 
 $rule = "总分:0;<br/>";
-$rule .= "卖出:跌幅>4%;加一分<br/>";
-$rule .= "减持:跌幅<=4%;加一分<br/>";
-$rule .= "中性:涨了加一分;跌了减一分<br/>";
-$rule .= "增持:涨幅<=4%;加一分<br/>";
-$rule .= "买入:涨幅>4%;加一分<br/>";
+$rule .= "卖出:涨幅<0,加1分;反之,减1分<br/>";
+$rule .= "减持:涨幅>=-4% && 涨幅<=4%,加1分;反之,减1分<br/>";
+$rule .= "中性:涨了加1分;跌了减1分<br/>";
+$rule .= "增持:涨幅>0,加1分;反之,减1分<br/>";
+$rule .= "买入:涨幅>0,加1分;反之,减1分<br/>";
 $rule .= "正确率:所得分/总数<br/>";
 
 
